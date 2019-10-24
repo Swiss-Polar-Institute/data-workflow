@@ -17,7 +17,7 @@ class CreateModify(models.Model):
 
 class Endpoint(CreateModify):
     """Details of endpoint (provider of object storage)"""
-    name = models.CharField(help_text='Name of endpoint or service provider', blank=False, null=False)
+    name = models.CharField(help_text='Name of endpoint or service provider', max_length=50, blank=False, null=False)
 
     def __str__(self):
         return self.name
@@ -25,17 +25,17 @@ class Endpoint(CreateModify):
 
 class Bucket(CreateModify):
     """Details of object storage bucket."""
-    friendly_name = models.CharField(help_text='Friendly name of bucket', blank=False, null=False)
-    name = models.CharField(help_text='Bucket UUID name', blank=False, null=False)
-    status = models.CharField(help_text='Current status of the bucket', blank=False, null=False)
+    friendly_name = models.CharField(help_text='Friendly name of bucket', max_length=50, blank=False, null=False)
+    name = models.CharField(help_text='Bucket UUID name', max_length=50, blank=False, null=False)
+    status = models.CharField(help_text='Current status of the bucket', max_length=20, blank=False, null=False)
     endpoint = models.ForeignKey(Endpoint, help_text='Details of the endpoint of where the bucket is located', on_delete=models.PROTECT)
 
     def __str__(self):
         return "{}: {} - {} ({})".format(self.friendly_name, self.name, self.endpoint, self.status)
 
 
-class File(CreateModify):
-    """Abstract class to hold data about files that are held in object storage buckets."""
+class AbstractFile(CreateModify):
+    """Abstract class to hold data about files that are held or were held in object storage buckets."""
     bucket = models.ForeignKey(Bucket, help_text='Details of the object storage bucket where the file is stored', blank=False, null=False, on_delete=models.PROTECT)
     object_storage_key = models.CharField(help_text='Object storage key of the file', max_length=1024, blank=False, null=False)
     md5 = models.CharField(help_text='MD5 checksum of the file', max_length=32, blank=False, null=False)
@@ -43,3 +43,16 @@ class File(CreateModify):
 
     def __str__(self):
         return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.md5, self.size)
+
+    class Meta:
+        abstract = True
+
+
+class File(AbstractFile):
+    """Details about files that are held in object storage buckets."""
+    pass
+
+
+
+
+
