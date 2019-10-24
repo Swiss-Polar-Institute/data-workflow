@@ -33,6 +33,7 @@ class Command(BaseCommand):
             for row in reader:
                 file = File()
                 file.object_storage_key = row[0]
+                file.filename = row[0].split('/')[-1]
                 file.size = row[1]
                 file.etag = row[2]
                 file.bucket = bucket
