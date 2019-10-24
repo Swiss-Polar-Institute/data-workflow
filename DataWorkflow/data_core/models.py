@@ -17,7 +17,7 @@ class CreateModify(models.Model):
 
 class Endpoint(CreateModify):
     """Details of endpoint (provider of object storage)"""
-    name = models.CharField(help_text='Name of endpoint or service provider', max_length=50, blank=False, null=False)
+    name = models.CharField(help_text='Name of endpoint or service provider', max_length=50, blank=False, null=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -25,8 +25,8 @@ class Endpoint(CreateModify):
 
 class Bucket(CreateModify):
     """Details of object storage bucket."""
-    friendly_name = models.CharField(help_text='Friendly name of bucket', max_length=50, blank=False, null=False)
-    name = models.CharField(help_text='Bucket UUID name', max_length=50, blank=False, null=False)
+    friendly_name = models.CharField(help_text='Friendly name of bucket', max_length=50, blank=False, null=False, unique=True)
+    name = models.CharField(help_text='Bucket UUID name', max_length=50, blank=False, null=False, unique=True)
     endpoint = models.ForeignKey(Endpoint, help_text='Details of the endpoint of where the bucket is located', on_delete=models.PROTECT)
 
     def __str__(self):
@@ -35,7 +35,7 @@ class Bucket(CreateModify):
 
 class SourceFile(CreateModify):
     """Details of files that are used to import file lists"""
-    name = models.CharField(help_text='Name of file', max_length=150, blank=False, null=False)
+    name = models.CharField(help_text='Name of file', max_length=150, blank=False, null=False, unique=True)
 
     def __str__(self):
         return self.name
@@ -54,6 +54,7 @@ class AbstractFile(CreateModify):
 
     class Meta:
         abstract = True
+        unique_together = (('bucket', 'object_storage_key', 'md5'))
 
 
 class File(AbstractFile):
