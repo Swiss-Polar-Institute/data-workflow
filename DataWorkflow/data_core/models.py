@@ -46,7 +46,7 @@ class AbstractFile(CreateModify):
     """Abstract class to hold data about files that are held or were held in object storage buckets."""
     bucket = models.ForeignKey(Bucket, help_text='Details of the object storage bucket where the file is stored', blank=False, null=False, on_delete=models.PROTECT)
     object_storage_key = models.CharField(help_text='Object storage key of the file', max_length=1024, blank=False, null=False)
-    etag = models.CharField(help_text='ETag of the file', max_length=35, blank=False, null=False)
+    etag = models.CharField(help_text='ETag of the file', max_length=36, blank=False, null=False)
     size = models.BigIntegerField(help_text='Size of the file in bytes', blank=False, null=False)
     source_file = models.ForeignKey(SourceFile, help_text='Name of source file from which the file was listed', on_delete=models.PROTECT)
 
