@@ -53,10 +53,10 @@ class AbstractFile(CreateModify):
     sha1_unique_together = models.CharField(max_length=40)
 
     def __str__(self):
-        return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.md5, self.size)
+        return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.etag, self.size)
 
     def calculate_sha1_unique_together(self):
-        s = '{}{}{}'.format(self.bucket.id, self.object_storage_key, self.md5)
+        s = '{}{}{}'.format(self.bucket.id, self.object_storage_key, self.etag)
         s = s.encode('utf-8')
 
         return hashlib.sha1(s).hexdigest()

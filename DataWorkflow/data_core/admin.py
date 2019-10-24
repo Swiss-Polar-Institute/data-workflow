@@ -13,8 +13,8 @@ class BucketAdmin(admin.ModelAdmin):
 
 
 class FileAdmin(admin.ModelAdmin):
-    list_display = ('bucket', 'object_storage_key', 'md5', 'size', 'source_file', 'created_by', 'created_on', 'modified_by', 'modified_on', )
-    ordering = ['bucket', 'object_storage_key', 'md5', 'size', 'source_file', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
+    list_display = ('bucket', 'object_storage_key', 'etag', 'size', 'source_file', 'created_by', 'created_on', 'modified_by', 'modified_on', )
+    ordering = ['bucket', 'object_storage_key', 'etag', 'size', 'source_file', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
     readonly_fields = ('sha1_unique_together', )
 
 
