@@ -34,7 +34,7 @@ class Command(BaseCommand):
                 file = File()
                 file.object_storage_key = row[0]
                 file.size = row[1]
-                file.md5 = row[2]
+                file.etag = row[2]
                 file.bucket = bucket
                 file.source_file = source_file
                 file.sha1_unique_together = file.calculate_sha1_unique_together()
