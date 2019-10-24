@@ -3,7 +3,7 @@
 
 from django.core.management.base import BaseCommand
 
-from data_core.models import File, Bucket, SourceFile
+from data_core.models import Bucket, Endpoint
 import csv
 
 class Command(BaseCommand):
@@ -11,8 +11,21 @@ class Command(BaseCommand):
 
     def add_arguments(self, parser):
         parser.add_argument('filename', type=str)
-        parser.add_argument('friendly_bucket_name', type=str)
 
     def handle(self, *args, **options):
         print(options['filename'])
-        self.import_data_from_csv(options['filename'], options['friendly_bucket_name'])
+        self.import_data_from_csv(options['filename'])
+
+    def import_data_from_csv(self, filename):
+        with open(filename) as csvfile:
+            reader = csv.DictReader(csvfile)
+
+            for row in reader:
+                endpoint, created = Endpoint.objects.get_or_create(name=row['endpoint'])
+
+                bucket = Bucket()
+                bucket.friendly_name = row['friendly_name']
+                bucket.endpoint = endpoint
+                bucket.name = row['name']
+
+                bucket.save()
