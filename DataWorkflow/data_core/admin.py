@@ -23,7 +23,13 @@ class SourceFileAdmin(admin.ModelAdmin):
     ordering = ['name', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
 
 
+class BucketAdministrationAdmin(admin.ModelAdmin):
+    list_display = ('bucket', 'date_bucket_created', 'date_bucket_deleted', 'status', 'created_by', 'created_on', 'modified_by', 'modified_on', )
+    ordering = ['bucket', 'date_bucket_created', 'date_bucket_deleted', 'status', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
+
+
 admin.site.register(data_core.models.Endpoint, EndpointAdmin)
 admin.site.register(data_core.models.Bucket, BucketAdmin)
 admin.site.register(data_core.models.File, FileAdmin)
 admin.site.register(data_core.models.SourceFile, SourceFileAdmin)
+admin.site.register(data_core.models.BucketAdministration, BucketAdministrationAdmin)
