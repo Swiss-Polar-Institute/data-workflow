@@ -76,6 +76,16 @@ class File(AbstractFile):
     pass
 
 
+class BucketAdministration(models.Model):
+    """Details of buckets for purposes of administration."""
+    ACTIVE = 'active'
+    DELETED = 'deleted'
 
-
-
+    STATUS = (
+        (ACTIVE, 'active'),
+        (DELETED, 'deleted'),
+    )
+    bucket = models.ForeignKey(Bucket, help_text='Bucket to which these properties relate', on_delete=models.PROTECT)
+    date_created = models.DateField(help_text='Date on which the bucket was created', blank=False, null=False)
+    date_removed = models.DateField(help_text='Date on which the bucket was removed')
+    status = models.CharField(help_text='Status of the bucket', max_length=, choices=STATUS, blank=False, null=False, default=ACTIVE)

@@ -5,6 +5,7 @@ from django.core.management.base import BaseCommand
 
 from data_core.models import File, Bucket, SourceFile
 import csv
+from data_core.progress_report import ProgressReport
 
 class Command(BaseCommand):
     help = 'Adds lists of files from list in csv file'
@@ -25,6 +26,9 @@ class Command(BaseCommand):
             source_file, created = SourceFile.objects.get_or_create(name=filename)
 
             to_be_inserted = []
+            total_inserted = 0
+
+            progress_report = ProgressReport(4256917)
 
             for row in reader:
                 file = File()
@@ -37,7 +41,13 @@ class Command(BaseCommand):
 
                 to_be_inserted.append(file)
 
+                progress_report.increment_and_print_if_needed()
+
                 if len(to_be_inserted) == 50000:
                     File.objects.bulk_create(to_be_inserted)
+                    total_inserted += len(to_be_inserted)
+                    print('Inserted ', total_inserted, 'files')
+
+                    to_be_inserted = []
 
             File.objects.bulk_create(to_be_inserted)
