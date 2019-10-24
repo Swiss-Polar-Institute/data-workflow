@@ -17,6 +17,12 @@ class FileAdmin(admin.ModelAdmin):
     ordering = ['bucket', 'object_storage_key', 'md5', 'size', 'source_file', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
 
 
+class SourceFileAdmin(admin.ModelAdmin):
+    list_display = ('name', 'created_by', 'created_on', 'modified_by', 'modified_on', )
+    ordering = ['name', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
+
+
 admin.site.register(data_core.models.Endpoint, EndpointAdmin)
 admin.site.register(data_core.models.Bucket, BucketAdmin)
 admin.site.register(data_core.models.File, FileAdmin)
+admin.site.register(data_core.models.SourceFile, SourceFileAdmin)
