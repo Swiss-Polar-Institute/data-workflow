@@ -30,8 +30,4 @@ class Migration(migrations.Migration):
             name='name',
             field=models.CharField(help_text='Name of file', max_length=150, unique=True),
         ),
-        migrations.AlterUniqueTogether(
-            name='file',
-            unique_together={('bucket', 'object_storage_key', 'md5')},
-        ),
     ]
