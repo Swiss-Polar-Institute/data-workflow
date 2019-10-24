@@ -85,7 +85,10 @@ class BucketAdministration(CreateModify):
         (ACTIVE, 'active'),
         (DELETED, 'deleted'),
     )
-    bucket = models.ForeignKey(Bucket, help_text='Bucket to which these properties relate', on_delete=models.PROTECT)
+    bucket = models.OneToOneField(Bucket, help_text='Bucket to which these properties relate', on_delete=models.PROTECT)
     date_bucket_created = models.DateField(help_text='Date on which the bucket was created', blank=False, null=False)
     date_bucket_deleted = models.DateField(help_text='Date on which the bucket was removed')
     status = models.CharField(help_text='Status of the bucket', max_length=20, choices=STATUS, blank=False, null=False, default=ACTIVE)
+
+    class Meta:
+        verbose_name_plural = 'Bucket administration'
