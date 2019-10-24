@@ -19,9 +19,10 @@ class Command(BaseCommand):
 
     def import_data_from_csv(self, filename, friendly_bucket_name):
         with open(filename) as csvfile:
-            reader = csv.DictReader(csvfile, delimiter='\t')
+            reader = csv.reader(csvfile, delimiter='\t')
 
-            #bucket, created = Bucket.objects.get_or_create(friendly_name=friendly_bucket_name)
+
+            bucket, created = Bucket.objects.get_or_create(friendly_name=friendly_bucket_name)
             source_file, created = SourceFile.objects.get_or_create(name=filename)
 
             for row in reader:
