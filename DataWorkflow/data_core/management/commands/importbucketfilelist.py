@@ -24,6 +24,8 @@ class Command(BaseCommand):
             bucket, created = Bucket.objects.get_or_create(friendly_name=friendly_bucket_name)
             source_file, created = SourceFile.objects.get_or_create(name=filename)
 
+            to_be_inserted = []
+
             for row in reader:
                 file = File()
                 file.object_storage_key = row[0]
@@ -31,4 +33,11 @@ class Command(BaseCommand):
                 file.md5 = row[2]
                 file.bucket = bucket
                 file.source_file = source_file
-                file.save()
+                file.sha1_unique_together = file.calculate_sha1_unique_together()
+
+                to_be_inserted.append(file)
+
+                if len(to_be_inserted) == 50000:
+                    File.objects.bulk_create(to_be_inserted)
+
+            File.objects.bulk_create(to_be_inserted)

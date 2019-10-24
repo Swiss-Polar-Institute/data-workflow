@@ -46,7 +46,7 @@ class AbstractFile(CreateModify):
     """Abstract class to hold data about files that are held or were held in object storage buckets."""
     bucket = models.ForeignKey(Bucket, help_text='Details of the object storage bucket where the file is stored', blank=False, null=False, on_delete=models.PROTECT)
     object_storage_key = models.CharField(help_text='Object storage key of the file', max_length=1024, blank=False, null=False)
-    md5 = models.CharField(help_text='MD5 checksum of the file', max_length=32, blank=False, null=False)
+    etag = models.CharField(help_text='ETag of the file', max_length=35, blank=False, null=False)
     size = models.BigIntegerField(help_text='Size of the file in bytes', blank=False, null=False)
     source_file = models.ForeignKey(SourceFile, help_text='Name of source file from which the file was listed', on_delete=models.PROTECT)
 
@@ -55,11 +55,14 @@ class AbstractFile(CreateModify):
     def __str__(self):
         return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.md5, self.size)
 
-    def save(self, *args, **kwargs):
+    def calculate_sha1_unique_together(self):
         s = '{}{}{}'.format(self.bucket.id, self.object_storage_key, self.md5)
         s = s.encode('utf-8')
 
-        self.sha1_unique_together = hashlib.sha1(s).hexdigest()
+        return hashlib.sha1(s).hexdigest()
+
+    def save(self, *args, **kwargs):
+        self.sha1_unique_together = self.calculate_sha1_unique_together()
 
         super().save(*args, **kwargs)
 
