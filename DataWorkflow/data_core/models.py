@@ -37,6 +37,9 @@ class SourceFile(CreateModify):
     """Details of files that are used to import file lists"""
     name = models.CharField(help_text='Name of file', max_length=150, blank=False, null=False)
 
+    def __str__(self):
+        return self.name
+
 
 class AbstractFile(CreateModify):
     """Abstract class to hold data about files that are held or were held in object storage buckets."""

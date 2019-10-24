@@ -21,7 +21,6 @@ class Command(BaseCommand):
         with open(filename) as csvfile:
             reader = csv.reader(csvfile, delimiter='\t')
 
-
             bucket, created = Bucket.objects.get_or_create(friendly_name=friendly_bucket_name)
             source_file, created = SourceFile.objects.get_or_create(name=filename)
 
@@ -30,5 +29,6 @@ class Command(BaseCommand):
                 file.object_storage_key = row[0]
                 file.size = row[1]
                 file.md5 = row[2]
+                file.bucket = bucket
                 file.source_file = source_file
                 file.save()
