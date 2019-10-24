@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
+import hashlib
 
 
 class CreateModify(models.Model):
@@ -49,12 +50,22 @@ class AbstractFile(CreateModify):
     size = models.BigIntegerField(help_text='Size of the file in bytes', blank=False, null=False)
     source_file = models.ForeignKey(SourceFile, help_text='Name of source file from which the file was listed', on_delete=models.PROTECT)
 
+    sha1_unique_together = models.CharField(max_length=40)
+
     def __str__(self):
         return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.md5, self.size)
 
+    def save(self, *args, **kwargs):
+        s = '{}{}{}'.format(self.bucket.id, self.object_storage_key, self.md5)
+        s = s.encode('utf-8')
+
+        self.sha1_unique_together = hashlib.sha1(s).hexdigest()
+
+        super().save(*args, **kwargs)
+
     class Meta:
         abstract = True
-        unique_together = (('bucket', 'object_storage_key', 'md5'))
+        unique_together = (('sha1_unique_together'), )
 
 
 class File(AbstractFile):
