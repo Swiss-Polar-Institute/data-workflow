@@ -34,12 +34,18 @@ class Bucket(CreateModify):
         return "{}: {} - {} ({})".format(self.friendly_name, self.name, self.endpoint, self.status)
 
 
+class SourceFile(CreateModify):
+    """Details of files that are used to import file lists"""
+    name = models.CharField(help_text='Name of file', max_length=150, blank=False, null=False)
+
+
 class AbstractFile(CreateModify):
     """Abstract class to hold data about files that are held or were held in object storage buckets."""
     bucket = models.ForeignKey(Bucket, help_text='Details of the object storage bucket where the file is stored', blank=False, null=False, on_delete=models.PROTECT)
     object_storage_key = models.CharField(help_text='Object storage key of the file', max_length=1024, blank=False, null=False)
     md5 = models.CharField(help_text='MD5 checksum of the file', max_length=32, blank=False, null=False)
     size = models.BigIntegerField(help_text='Size of the file in bytes', blank=False, null=False)
+    source_file = models.ForeignKey(SourceFile, help_text='Name of source file from which the file was listed', on_delete=models.PROTECT)
 
     def __str__(self):
         return "{} - {} {} {}".format(self.bucket, self.object_storage_key, self.md5, self.size)
