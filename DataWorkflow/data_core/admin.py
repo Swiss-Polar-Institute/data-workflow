@@ -8,8 +8,8 @@ class EndpointAdmin(admin.ModelAdmin):
 
 
 class BucketAdmin(admin.ModelAdmin):
-    list_display = ('friendly_name', 'name', 'status', 'endpoint', 'created_by', 'created_on', 'modified_by', 'modified_on', )
-    ordering = ['friendly_name', 'name', 'status', 'endpoint', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
+    list_display = ('friendly_name', 'name', 'endpoint', 'created_by', 'created_on', 'modified_by', 'modified_on', )
+    ordering = ['friendly_name', 'name', 'endpoint', 'created_by', 'created_on', 'modified_by', 'modified_on', ]
 
 
 class FileAdmin(admin.ModelAdmin):

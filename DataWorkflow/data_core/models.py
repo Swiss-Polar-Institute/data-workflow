@@ -27,7 +27,6 @@ class Bucket(CreateModify):
     """Details of object storage bucket."""
     friendly_name = models.CharField(help_text='Friendly name of bucket', max_length=50, blank=False, null=False)
     name = models.CharField(help_text='Bucket UUID name', max_length=50, blank=False, null=False)
-    status = models.CharField(help_text='Current status of the bucket', max_length=20, blank=False, null=False)
     endpoint = models.ForeignKey(Endpoint, help_text='Details of the endpoint of where the bucket is located', on_delete=models.PROTECT)
 
     def __str__(self):
