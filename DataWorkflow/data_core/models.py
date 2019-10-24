@@ -30,7 +30,7 @@ class Bucket(CreateModify):
     endpoint = models.ForeignKey(Endpoint, help_text='Details of the endpoint of where the bucket is located', on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{}: {} - {} ({})".format(self.friendly_name, self.name, self.endpoint, self.status)
+        return "{}: {} - {}".format(self.friendly_name, self.name, self.endpoint)
 
 
 class SourceFile(CreateModify):
