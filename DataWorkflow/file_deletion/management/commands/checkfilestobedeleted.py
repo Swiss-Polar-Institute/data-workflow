@@ -21,7 +21,7 @@ class VerifyFilesToBeDeleted:
         self._files_to_be_deleted_ids = None
 
     def all_copies_deleted(self, etag):
-        return File.objects.filter(etag=etag).exclude(id__in=self._files_to_be_deleted_ids).count() == 0
+        return not File.objects.filter(etag=etag).exclude(id__in=self._files_to_be_deleted_ids).exists()
 
     def verify(self):
         self._files_to_be_deleted_ids = FileToBeDeleted.objects.\
