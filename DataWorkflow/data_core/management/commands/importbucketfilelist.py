@@ -49,7 +49,7 @@ class Command(BaseCommand):
 
                 progress_report.increment_and_print_if_needed()
 
-                if len(to_be_inserted) == 50000:
+                if len(to_be_inserted) == 10000:
                     File.objects.bulk_create(to_be_inserted)
                     total_inserted += len(to_be_inserted)
                     print('Inserted ', total_inserted, 'files')
