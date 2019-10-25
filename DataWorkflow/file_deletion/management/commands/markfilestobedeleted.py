@@ -5,6 +5,8 @@ from ...models import FileToBeDeleted
 from django.db.models import Max
 from django.db import transaction
 
+from termcolor import cprint
+
 
 class Command(BaseCommand):
     help = 'Mark files to be deleted'
@@ -38,10 +40,10 @@ class MarkFilesToBeDeleted:
         files_to_be_deleted = File.objects.\
             filter(object_storage_key__startswith=self._object_storage_key_stargs_with).\
             exclude(id__in=deleted_ids)
-        print('It is going to add for deletion:')
+        print('This file is going to be added for deletion:')
 
         for file in files_to_be_deleted:
-            print(file.object_storage_key)
+            cprint(file.object_storage_key, 'green')
 
         print('Total number of files to be added for deletion:', files_to_be_deleted.count())
         print('Do you want to continue? (Yy)')
@@ -54,7 +56,9 @@ class MarkFilesToBeDeleted:
 
         with transaction.atomic():
             for file in files_to_be_deleted:
-                files_to_be_deleted = FileToBeDeleted()
-                files_to_be_deleted.batch = deletion_batch_number
-                files_to_be_deleted.file = file
-                files_to_be_deleted.save()
+                file_to_be_deleted = FileToBeDeleted()
+                file_to_be_deleted.batch = deletion_batch_number
+                file_to_be_deleted.file = file
+                file_to_be_deleted.save()
+
+        cprint('Batch number of file(s) added for deletion: ' + str(deletion_batch_number), 'red')

@@ -46,7 +46,7 @@ class ListDuplicatedFiles:
         files = File.objects.filter(etag__in=etags).order_by('etag')
 
         for file in files:
-            print(file.object_storage_key, file.size)
+            print(file.object_storage_key.ljust(80), file.etag, str(file.size).rjust(10))
 
         print('Total number of files duplicated:', total_number_files_duplicated)
         print('Size of duplicated files: {:0.3f} GB'.format(size_of_duplicated_files/1024/1024/1024))
