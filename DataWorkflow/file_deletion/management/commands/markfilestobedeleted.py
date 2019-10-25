@@ -3,6 +3,7 @@ from django.core.management.base import BaseCommand
 from data_core.models import File
 from ...models import FileToBeDeleted
 from django.db.models import Max
+from django.db import transaction
 
 
 class Command(BaseCommand):
@@ -37,7 +38,6 @@ class MarkFilesToBeDeleted:
         files_to_be_deleted = File.objects.\
             filter(object_storage_key__startswith=self._object_storage_key_stargs_with).\
             exclude(id__in=deleted_ids)
-
         print('It is going to add for deletion:')
 
         for file in files_to_be_deleted:
@@ -52,8 +52,9 @@ class MarkFilesToBeDeleted:
 
         deletion_batch_number = MarkFilesToBeDeleted.get_deletion_batch_number()
 
-        for file in files_to_be_deleted:
-            files_to_be_deleted = FileToBeDeleted()
-            files_to_be_deleted.batch = deletion_batch_number
-            files_to_be_deleted.file = file
-            files_to_be_deleted.save()
+        with transaction.atomic():
+            for file in files_to_be_deleted:
+                files_to_be_deleted = FileToBeDeleted()
+                files_to_be_deleted.batch = deletion_batch_number
+                files_to_be_deleted.file = file
+                files_to_be_deleted.save()
