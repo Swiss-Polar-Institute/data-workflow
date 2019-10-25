@@ -28,21 +28,25 @@ class ListDuplicatedFiles:
 
         result = File.objects.\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
-            exclude(id__in=deleted_ids).values('etag').\
+            exclude(id__in=deleted_ids).values('etag', 'size').\
             annotate(number_of_files=Count('etag')).\
             filter(number_of_files__gt=1)
 
         total_number_files_duplicated = 0
         etags = []
 
+        size_of_duplicated_files = 0
         for r in result:
             total_number_files_duplicated += r['number_of_files']
             etags.append(r['etag'])
+            size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
 
         print('Total number of files duplicated:', total_number_files_duplicated)
 
         files = File.objects.filter(etag__in=etags).order_by('etag')
+
         for file in files:
             print(file.object_storage_key, file.size)
 
         print('Total number of files duplicated:', total_number_files_duplicated)
+        print('Size of duplicated files: {:0.3f} GB'.format(size_of_duplicated_files/1024/1024/1024))

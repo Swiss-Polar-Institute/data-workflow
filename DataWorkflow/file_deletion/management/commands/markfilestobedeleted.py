@@ -41,7 +41,8 @@ class MarkFilesToBeDeleted:
         print('It is going to add for deletion:')
 
         for file in files_to_be_deleted:
-            print(file)
+            print(file.object_storage_key)
+
         print('Total number of files to be added for deletion:', files_to_be_deleted.count())
         print('Do you want to continue? (Yy)')
         want_to_add_for_deleted = input()
