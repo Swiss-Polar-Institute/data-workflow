@@ -7,6 +7,7 @@ from data_core.models import File, Bucket, SourceFile
 import csv
 from data_core.progress_report import ProgressReport
 
+
 class Command(BaseCommand):
     help = 'Adds lists of files from list in csv file'
 
@@ -18,6 +19,10 @@ class Command(BaseCommand):
         print(options['filename'])
         self.import_data_from_csv(options['filename'], options['friendly_bucket_name'])
 
+    @staticmethod
+    def lines_of_file(filename):
+        return sum(1 for line in open(filename))
+
     def import_data_from_csv(self, filename, friendly_bucket_name):
         with open(filename) as csvfile:
             reader = csv.reader(csvfile, delimiter='\t')
@@ -28,7 +33,7 @@ class Command(BaseCommand):
             to_be_inserted = []
             total_inserted = 0
 
-            progress_report = ProgressReport(4256917)
+            progress_report = ProgressReport(Command.lines_of_file(filename))
 
             for row in reader:
                 file = File()
