@@ -10,7 +10,7 @@ touch /srv/logs/gunicorn.log
 touch /srv/logs/access.log
 tail -n 0 -f /srv/logs/*.log &
 
-gunicorn ProjectApplication.wsgi:application \
+gunicorn DataWorkflow.wsgi:application \
         --bind 0.0.0.0:8086 \
         --workers 3 \
         --log-level=info \
