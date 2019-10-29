@@ -15,7 +15,7 @@ USER=$(whoami)
 OUTPUT_NAME=$(date "+dataworkflow-%Y%m%d-%H%M%S-$USER.sql")
 OUTPUT_FILE="$DIRECTORY/$OUTPUT_NAME"
 
-mysqldump --defaults-file=/etc/mysql/data-workflow.cnf dataworkflow > "$OUTPUT_FILE"
+mysqldump --defaults-file=/etc/mysql/data_workflow_mysql.conf dataworkflow > "$OUTPUT_FILE"
 
 echo
 echo "Backup done: $OUTPUT_FILE"
