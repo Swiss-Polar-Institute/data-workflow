@@ -35,7 +35,7 @@ class ListDuplicatedFiles:
         result = File.objects.\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
             exclude(id__in=deleted_ids).\
-            values('etag').\
+            values('etag', 'size').\
             annotate(number_of_files=Count('etag')).\
             filter(number_of_files__gt=1)
 
@@ -46,7 +46,7 @@ class ListDuplicatedFiles:
         for r in result:
             total_number_files_duplicated += r['number_of_files']
             etags.append(r['etag'])
-            #size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
+            size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
 
         etags_set = set(etags)
 
