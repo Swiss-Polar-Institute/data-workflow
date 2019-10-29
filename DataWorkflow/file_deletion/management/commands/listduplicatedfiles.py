@@ -35,7 +35,7 @@ class ListDuplicatedFiles:
         result = File.objects.\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
             exclude(id__in=deleted_ids).\
-            values('etag', 'size').\
+            values('etag').\
             annotate(number_of_files=Count('etag')).\
             filter(number_of_files__gt=1)
 
@@ -46,7 +46,7 @@ class ListDuplicatedFiles:
         for r in result:
             total_number_files_duplicated += r['number_of_files']
             etags.append(r['etag'])
-            size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
+            #size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
 
         etags_set = set(etags)
 
@@ -54,7 +54,8 @@ class ListDuplicatedFiles:
 
         files = File.objects.\
             filter(etag__in=etags).\
-            filter(bucket__friendly_name=self._friendly_bucket_name).\
+            filter(bucket__friendly_name=self._friendly_bucket_name). \
+            exclude(id__in=deleted_ids). \
             order_by('etag', 'object_storage_key')
 
         output_filename = 'duplicate_files_' + self._friendly_bucket_name + '_' + datetime.datetime.strftime(timezone.now(), '%Y%m%d_%H%M%S') + '.csv'
