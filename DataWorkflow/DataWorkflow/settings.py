@@ -148,3 +148,9 @@ STATIC_URL = '/static/'
 
 # For deployment
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+try:
+    from local_settings import *
+    print('Imported local_settings')
+except ImportError:
+    pass
