@@ -3,3 +3,4 @@ mysqlclient==1.4.4
 pytz==2019.3
 sqlparse==0.3.0
 termcolor==1.1.0
+gunicorn==19.9.0

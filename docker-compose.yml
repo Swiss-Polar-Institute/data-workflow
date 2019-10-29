@@ -9,8 +9,8 @@ services:
     secrets:
       - data_workflow_mysql.conf
     volumes:
-      - static_volume:/code/ProjectApplication/staticfiles
-      - ./DataWorkflow:/code/ProjectApplication
+      - static_volume:/code/DataWorkflow/staticfiles
+      - ./DataWorkflow:/code/DataWorkflow
     ports:
       - 8086:8086
     networks:
