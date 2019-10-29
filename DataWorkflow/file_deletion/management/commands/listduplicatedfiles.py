@@ -48,9 +48,7 @@ class ListDuplicatedFiles:
             etags.append(r['etag'])
             size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
 
-        etags_set = set(etags)
-
-        print('Total number of files duplicated:', total_number_files_duplicated)
+        print('Total number of distinct etags to deduplicate:', len(etags))
 
         files = File.objects.\
             filter(etag__in=etags).\
