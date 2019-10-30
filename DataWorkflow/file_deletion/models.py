@@ -12,14 +12,15 @@ class Batch(CreateModify):
 
 class FileToBeDeleted(CreateModify):
     """Files listed ready for deletion from buckets."""
-    batch = models.ForeignKey(Batch, help_text='Batch of file added', on_delete=models.PROTECT)
+    batch = models.ForeignKey(Batch, help_text='Batch of the file added')
+    batch_old = models.IntegerField(help_text='Batch of file added')
     file = models.ForeignKey(File, help_text='File that has been added to this table', on_delete=models.PROTECT)
 
     class Meta:
         verbose_name_plural = 'Files to be deleted'
 
     def __str__(self):
-        return '{} - {}'.format(self.batch, self.file)
+        return '{} - {}'.format(self.batch_old, self.file)
 
 
 class DeletedFile(AbstractFile):
