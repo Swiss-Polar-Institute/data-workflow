@@ -1,5 +1,6 @@
 #!/bin/bash
 
+
 if [ ! -n "$1" ]
 then
 	echo "Please provide directory to export the database to"
