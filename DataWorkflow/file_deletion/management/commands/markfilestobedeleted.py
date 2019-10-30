@@ -2,7 +2,6 @@ from django.core.management.base import BaseCommand
 
 from data_core.models import File
 from ...models import FileToBeDeleted, Batch, MarkFilesDeleteCommand
-from django.db.models import Max
 from django.db import transaction
 
 from termcolor import cprint
@@ -24,7 +23,7 @@ class Command(BaseCommand):
 class MarkFilesToBeDeleted:
     def __init__(self, friendly_bucket_name, object_storage_key_starts_with):
         self._friendly_bucket_name = friendly_bucket_name
-        self._object_storage_key_stargs_with = object_storage_key_starts_with
+        self._object_storage_key_starts_with = object_storage_key_starts_with
 
     def check_deletion_will_not_make_lost_file(self, files_to_be_deleted):
         ids_to_be_deleted = FileToBeDeleted.objects.\
@@ -70,7 +69,7 @@ class MarkFilesToBeDeleted:
             values_list('file__id', flat=True)
 
         files_to_be_deleted = File.objects.\
-            filter(object_storage_key__startswith=self._object_storage_key_stargs_with).\
+            filter(object_storage_key__startswith=self._object_storage_key_starts_with).\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
             exclude(id__in=deleted_ids)
         print('This file is going to be added for deletion:')
@@ -87,14 +86,14 @@ class MarkFilesToBeDeleted:
         if want_to_add_for_deleted.lower() != 'y':
             exit(1)
 
-        with transaction.atomic():
+        with transaction.atomic(): # makes faster (only one save is done after all the operations below)
             # create an entry in the Batch table, which is just an id (primary key, so this is an auto-incrementing integer)
             batch = Batch()
             batch.save()
 
             mark_files_delete_command = MarkFilesDeleteCommand()
             mark_files_delete_command.batch = batch
-            mark_files_delete_command.command = self._object_storage_key_stargs_with
+            mark_files_delete_command.command = self._object_storage_key_starts_with
             mark_files_delete_command.save()
 
             for file in files_to_be_deleted:
