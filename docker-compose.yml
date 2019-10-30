@@ -11,6 +11,7 @@ services:
     volumes:
       - static_volume:/code/DataWorkflow/staticfiles
       - ./DataWorkflow:/code/DataWorkflow
+      - ${DATA_WORKFLOW_DATA}:/code/DataWorkflow/data
     ports:
       - 8086:8086
     networks:
