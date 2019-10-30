@@ -8,8 +8,8 @@ class BatchAdmin(admin.ModelAdmin):
 
 
 class FileToBeDeletedAdmin(admin.ModelAdmin):
-    list_display = ('batch_old', 'file', 'created_by', 'created_on', 'modified_by', 'modified_on', )
-    ordering = ['batch_old', 'file', ]
+    list_display = ('batch', 'file', 'created_by', 'created_on', 'modified_by', 'modified_on', )
+    ordering = ['batch', 'file', ]
     raw_id_fields = ('file',)
 
 
