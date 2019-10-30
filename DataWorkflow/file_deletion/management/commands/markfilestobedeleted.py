@@ -71,6 +71,7 @@ class MarkFilesToBeDeleted:
 
         files_to_be_deleted = File.objects.\
             filter(object_storage_key__startswith=self._object_storage_key_stargs_with).\
+            filter(bucket__friendly_name=self._friendly_bucket_name).\
             exclude(id__in=deleted_ids)
         print('This file is going to be added for deletion:')
 
