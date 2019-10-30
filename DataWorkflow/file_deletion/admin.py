@@ -3,8 +3,8 @@ from . import models
 
 
 class BatchAdmin(admin.ModelAdmin):
-    list_display = ('number', 'created_by', 'created_on', 'modified_by', 'modified_on',)
-    ordering = ['number', 'created_by', 'created_on', 'modified_by', 'modified_on',]
+    list_display = ('created_by', 'created_on', 'modified_by', 'modified_on',)
+    ordering = ['created_by', 'created_on', 'modified_by', 'modified_on',]
 
 
 class FileToBeDeletedAdmin(admin.ModelAdmin):

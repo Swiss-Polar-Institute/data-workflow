@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from data_core.models import File
-from ...models import FileToBeDeleted
+from ...models import FileToBeDeleted, Batch, MarkFilesDeleteCommand
 from django.db.models import Max
 from django.db import transaction
 
@@ -25,12 +25,6 @@ class MarkFilesToBeDeleted:
     def __init__(self, friendly_bucket_name, object_storage_key_starts_with):
         self._friendly_bucket_name = friendly_bucket_name
         self._object_storage_key_stargs_with = object_storage_key_starts_with
-
-    @staticmethod
-    def get_deletion_batch_number():
-        batch_number = FileToBeDeleted.objects.aggregate(Max('batch'))['batch__max']
-
-        return batch_number+1 if batch_number else 1
 
     def check_deletion_will_not_make_lost_file(self, files_to_be_deleted):
         ids_to_be_deleted = FileToBeDeleted.objects.\
@@ -92,13 +86,20 @@ class MarkFilesToBeDeleted:
         if want_to_add_for_deleted.lower() != 'y':
             exit(1)
 
-        deletion_batch_number = MarkFilesToBeDeleted.get_deletion_batch_number()
-
         with transaction.atomic():
+            # create an entry in the Batch table, which is just an id (primary key, so this is an auto-incrementing integer)
+            batch = Batch()
+            batch.save()
+
+            mark_files_delete_command = MarkFilesDeleteCommand()
+            mark_files_delete_command.batch = batch
+            mark_files_delete_command.command = self._object_storage_key_stargs_with
+            mark_files_delete_command.save()
+
             for file in files_to_be_deleted:
                 file_to_be_deleted = FileToBeDeleted()
-                file_to_be_deleted.batch = deletion_batch_number
+                file_to_be_deleted.batch = batch
                 file_to_be_deleted.file = file
                 file_to_be_deleted.save()
 
-        cprint('Batch number of file(s) added for deletion: ' + str(deletion_batch_number), 'red')
+        cprint('Batch number of file(s) added for deletion: ' + str(batch), 'red')

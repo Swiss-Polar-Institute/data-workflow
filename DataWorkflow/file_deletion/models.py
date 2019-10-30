@@ -4,10 +4,7 @@ from data_core.models import CreateModify, File, AbstractFile
 
 class Batch(CreateModify):
     """Increasing number used to identify a selection of files that were added to be deleted in one go."""
-    number = models.IntegerField(help_text='Integer used to represent a batch', null=False, blank=False)
-
-    def __str__(self):
-        return self.number
+    pass
 
 
 class FileToBeDeleted(CreateModify):
