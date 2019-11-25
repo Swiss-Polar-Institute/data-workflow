@@ -28,6 +28,8 @@ services:
     environment:
       - NGINX_PORT=1236
       - VIRTUAL_HOST=${DATA_WORKFLOW_DOMAIN}
+      - LETSENCRYPT_HOST=${DATA_WORKFLOW_DOMAIN}
+      - LETSENCRYPT_EMAIL=${LETSENCRYPT_EMAIL}
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - static_volume:/code/DataWorkflow/staticfiles
