@@ -18,6 +18,11 @@ services:
       - nginx-proxy
     links:
       - database
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: data-workflow.django
 
   reverse-proxy:
     image: nginx:1.17
@@ -37,6 +42,11 @@ services:
       - data-workflow
     networks:
       - nginx-proxy
+    logging:
+      driver: fluentd
+      options:
+        fluentd-address: localhost:24224
+        tag: data-workflow.nginx
 
   database:
     image: mariadb:10.4
@@ -51,6 +61,11 @@ services:
       - "3306"
     networks:
       - nginx-proxy
+    logging:
+      driver: "fluentd"
+      options:
+        fluentd-address: localhost:24224
+        tag: data-workflow.mariadb
 
 volumes:
   static_volume: {}
