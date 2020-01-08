@@ -24,7 +24,15 @@ importbucketfilelist
 ```
 See the database ER diagram (TODO) for details of what information is included. 
 
-### Checking for duplicate files within a bucket
+### Checking for duplicate files within a bucket (TODO)
+
+### Marking files for deletion (TODO)
+
+### Verification of files for deletion (TODO)
+
+### Deletion of duplicate files (TODO)
+
+
 
 
 
