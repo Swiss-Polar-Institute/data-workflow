@@ -45,7 +45,7 @@ See the database [ER diagram](https://github.com/Swiss-Polar-Institute/data-work
 
 ### Deletion of duplicate files (TODO)
 
-
+When a file is deleted, the database entry is moved from the file table to the deleted_file table. Note that when doing this, the values for created_on, created_by, modified_on and modified_by are not copied over. The created_on and created_by fields should be updated when the deleted_file entry is created, ie. when the file itself is deleted.
 
 
 
