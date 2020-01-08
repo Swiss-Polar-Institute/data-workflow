@@ -35,7 +35,7 @@ python3 manage.py importbucketfilelist filename friendly_bucket_name
 ```
 where filename is a csv file containing the list of files.
 
-See the database ER diagram (TODO) for details of what information is included. 
+See the database [ER diagram](https://github.com/Swiss-Polar-Institute/data-workflow/blob/master/documentation/spi-data-workflow-er-diagram.png) for details of what information is included in the relational database. 
 
 ### Checking for duplicate files within a bucket (TODO)
 
