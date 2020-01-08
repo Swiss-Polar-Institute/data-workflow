@@ -40,6 +40,9 @@ See the database [ER diagram](https://github.com/Swiss-Polar-Institute/data-work
 ### Checking for duplicate files within a bucket (TODO)
 
 ### Marking files for deletion (TODO)
+```
+python3 manage.py markfilestobedeleted friendly_bucket_name object_storage_key_starts_with
+```
 
 ### Verification of files for deletion (TODO)
 
