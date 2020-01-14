@@ -37,7 +37,13 @@ where filename is a csv file containing the list of files.
 
 See the database [ER diagram](https://github.com/Swiss-Polar-Institute/data-workflow/blob/master/documentation/spi-data-workflow-er-diagram.png) for details of what information is included in the relational database. 
 
-### Checking for duplicate files within a bucket (TODO)
+### Listing duplicate files within a bucket (TODO)
+Duplicate files within the same bucket can be listed.
+
+```
+python3 manage.py listduplicatedfiles friendly_bucket_name output_filepath
+```
+This command results in a csv file (in the output_filepath) which lists the duplicate files next to eachother. File size and etag are also included. 
 
 ### Marking files for deletion (TODO)
 ```
