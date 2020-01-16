@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from data_core.models import File
-from ...models import FileToBeDeleted, Batch, MarkFilesDeleteCommand
+from ...models import FileToBeDeleted, FileMarkedToNotBeDeleted, Batch, MarkFilesDeleteCommand
 from django.db import transaction
 
 from termcolor import cprint
@@ -68,10 +68,16 @@ class MarkFilesToBeDeleted:
             filter(file__bucket__friendly_name=self._friendly_bucket_name). \
             values_list('file__id', flat=True)
 
+        files_to_not_be_deleted = FileMarkedToNotBeDeleted.objects. \
+            filter(file__bucket__friendly_name=self._friendly_bucket_name). \
+            values_list('file__id', flat=True)
+
         files_to_be_deleted = File.objects.\
             filter(object_storage_key__startswith=self._object_storage_key_starts_with).\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
-            exclude(id__in=deleted_ids)
+            exclude(id__in=deleted_ids).\
+            exclude(id__in=files_to_not_be_deleted)
+
         print('This file is going to be added for deletion:')
 
         for file in files_to_be_deleted:

@@ -8,6 +8,7 @@ from django.db import transaction
 
 from data_core.progress_report import ProgressReport
 
+
 class Command(BaseCommand):
     help = 'Moves deleted files to deleted files table'
 

@@ -1,7 +1,7 @@
 from django.core.management.base import BaseCommand
 
 from data_core.models import File
-from ...models import FileToBeDeleted
+from ...models import FileToBeDeleted, FileMarkedToNotBeDeleted
 from django.db.models import Count
 from django.utils import timezone
 import csv
@@ -32,9 +32,14 @@ class ListDuplicatedFiles:
             filter(file__bucket__friendly_name=self._friendly_bucket_name).\
             values_list('file__id', flat=True)
 
+        files_to_not_be_deleted_ids = FileMarkedToNotBeDeleted.objects.\
+            filter(file__bucket__friendly_name=self._friendly_bucket_name).\
+            values_list('file__id', flat=True)
+
         result = File.objects.\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
             exclude(id__in=deleted_ids).\
+            exclude(id__in=files_to_not_be_deleted_ids).\
             values('etag', 'size').\
             annotate(number_of_files=Count('etag')).\
             filter(number_of_files__gt=1)
@@ -52,8 +57,9 @@ class ListDuplicatedFiles:
 
         files = File.objects.\
             filter(etag__in=etags).\
-            filter(bucket__friendly_name=self._friendly_bucket_name). \
-            exclude(id__in=deleted_ids). \
+            filter(bucket__friendly_name=self._friendly_bucket_name).\
+            exclude(id__in=deleted_ids).\
+            exclude(id__in=files_to_not_be_deleted_ids).\
             order_by('etag', 'object_storage_key')
 
         output_filename = 'duplicate_files_' + self._friendly_bucket_name + '_' + datetime.datetime.strftime(timezone.now(), '%Y%m%d_%H%M%S') + '.csv'
