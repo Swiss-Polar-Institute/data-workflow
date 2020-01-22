@@ -28,7 +28,7 @@ class ListDuplicatedFiles:
 
     def list(self):
         # select * from data_core_file where etag in (select distinct etag from data_core_file group by etag having count(*)>1) order by etag, object_storage_key;
-        deleted_ids = FileToBeDeleted.objects.\
+        deleted_file_ids = FileToBeDeleted.objects.\
             filter(file__bucket__friendly_name=self._friendly_bucket_name).\
             values_list('file__id', flat=True)
 
@@ -36,29 +36,30 @@ class ListDuplicatedFiles:
             filter(file__bucket__friendly_name=self._friendly_bucket_name).\
             values_list('file__id', flat=True)
 
-        result = File.objects.\
+        non_deleted_files = File.objects.\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
-            exclude(id__in=deleted_ids).\
-            exclude(id__in=files_to_not_be_deleted_ids).\
+            exclude(id__in=deleted_file_ids)
+
+        non_deleted_duplicate_files = non_deleted_files.\
             values('etag', 'size').\
             annotate(number_of_files=Count('etag')).\
             filter(number_of_files__gt=1)
 
         total_number_files_duplicated = 0
-        etags = []
+        duplicate_file_etags = []
 
         size_of_duplicated_files = 0
-        for r in result:
-            total_number_files_duplicated += r['number_of_files']
-            etags.append(r['etag'])
-            size_of_duplicated_files += r['size'] * (r['number_of_files']-1)
+        for file in non_deleted_duplicate_files:
+            total_number_files_duplicated += file['number_of_files']
+            duplicate_file_etags.append(file['etag'])
+            size_of_duplicated_files += file['size'] * (file['number_of_files']-1)
 
-        print('Total number of distinct etags to deduplicate:', len(etags))
+        print('Total number of distinct etags to deduplicate:', len(duplicate_file_etags))
 
         files = File.objects.\
-            filter(etag__in=etags).\
+            filter(etag__in=duplicate_file_etags).\
             filter(bucket__friendly_name=self._friendly_bucket_name).\
-            exclude(id__in=deleted_ids).\
+            exclude(id__in=deleted_file_ids).\
             exclude(id__in=files_to_not_be_deleted_ids).\
             order_by('etag', 'object_storage_key')
 
