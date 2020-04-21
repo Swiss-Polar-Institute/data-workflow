@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'data_core',
-    'file_deletion'
+    'file_deletion',
+    'publications',
 ]
 
 MIDDLEWARE = [

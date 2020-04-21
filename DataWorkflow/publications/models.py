@@ -4,6 +4,7 @@ from django.db import models
 # DataCite Metadata Working Group. (2019). DataCite Metadata Schema Documentation for the Publication and Citation
 # of Research Data. Version 4.3. DataCite e.V. https://doi.org/10.14454/7xq3-zf69
 
+
 class IdentifierType(models.Model):
     """
     Type of identifier as from list in DataCite Metadata Schema version 4.3
