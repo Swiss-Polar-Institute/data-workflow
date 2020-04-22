@@ -78,6 +78,42 @@ class Publication(models.Model):
                                            null=False)
     resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False,
                                          null=False, on_delete=models.PROTECT)
+    size = models.CharField(max_length=50,
+                            help_text='Size of resource, free text to include data volume, pages, time etc.',
+                            blank=True, null=True)
+
+
+class RelationType(models.Model):
+    """
+    Description of relationship between resource being registered and related resource.
+    """
+    name = models.CharField(max_length=50,
+                            help_text='Description of relationship between resource being registered and related '
+                                      'resource.',
+                            blank=False, null=False)
+
+
+class RelatedIdentifierType(models.Model):
+    """
+    Type of related identifier
+    """
+    name = models.CharField(max_length=50, help_text='Type of related identifier')
+
+
+class RelatedIdentifier(models.Model):
+    """
+    Globally unique identifiers of related resources.
+    """
+    publication = models.ForeignKey(Publication)
+    identifier = models.CharField(max_length=200,
+                                  help_text='Uniquely identifies an item according to various schemas.', blank=False,
+                                  null=False)
+    related_identifier_type = models.ForeignKey(RelatedIdentifierType, blank=False, null=False,
+                                                on_delete=models.PROTECT)
+    relation_type = models.ForeignKey(RelationType,
+                                      help_text='Description of relationship between resource being registered and '
+                                                'related resource.',
+                                      blank=False, null=False, on_delete=models.PROTECT)
 
 
 class DateType(models.Model):
@@ -85,6 +121,8 @@ class DateType(models.Model):
     Type of date.
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
+    information = models.CharField(max_length=500, help_text='Free text information about a date.', blank=True,
+                                   null=True)
 
 
 class Date(models.Model):
