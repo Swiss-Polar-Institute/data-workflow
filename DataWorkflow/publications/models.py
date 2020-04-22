@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Models below for the publications are based on the DataCite Metadata Schema version 4.3:
 # DataCite Metadata Working Group. (2019). DataCite Metadata Schema Documentation for the Publication and Citation
 # of Research Data. Version 4.3. DataCite e.V. https://doi.org/10.14454/7xq3-zf69
@@ -22,6 +23,17 @@ class Identifier(models.Model):
                            null=False)
     type = models.ForeignKey(IdentifierType, help_text='Type of identifier', blank=False,
                              null=False, on_delete=models.PROTECT)
+
+
+class Publication(models.Model):
+    """
+    Describes a publication according to the DataCite Metadata Schema version 4.3.
+    """
+
+    identifier = models.OneToOneField(Identifier,
+                                      help_text='Unique identifier that identifies a resource. This can relate to a '
+                                                'specific version or all versions.', blank=False, null=False,
+                                      on_delete=models.PROTECT)
 
 
 class NameType(models.Model):
@@ -53,6 +65,7 @@ class AbstractIdentifier(models.Model):
                                          blank=False, null=False)
     schema_uri = models.URLField(max_length=100, help_text='URI of the identifier schema.', blank=False,
                                  null=False)  # conditions here are required for the AffiliationIdentifier. They could
+
     # be relaxed for the NameIdentifier.
 
     class Meta:
@@ -89,6 +102,9 @@ class Creator(models.Model):
     Main researchers involved in the publication, or authors of the publication, in order of priority. This can be an
     organisation or a person.
     """
+    publication = models.ForeignKey(Publication,
+                                    help_text='Publication in which this creator has been involved or authored.',
+                                    blank=False, null=False, on_delete=models.PROTECT)
     name = models.OneToOneField(CreatorName, help_text='Creator of the publication.', blank=False, null=False,
                                 on_delete=models.PROTECT)
     given_name = models.CharField(max_length=50, help_text='Personal or first name of the creator.', blank=True,
@@ -104,16 +120,18 @@ class Creator(models.Model):
                                     null=True, on_delete=models.PROTECT)
 
 
-class Publication(models.Model):
+class TitleType(models.Model):
     """
-    Describes a publication according to the DataCite Metadata Schema version 4.3.
+    Type of title of resource.
     """
+    name = models.CharField(max_length=50, help_text='Type of title.', blank=False, null=False)
 
-    identifier = models.OneToOneField(Identifier,
-                                      help_text='Unique identifier that identifies a resource. This can relate to a '
-                                                'specific version or all versions.', blank=False, null=False,
-                                      on_delete=models.PROTECT)
-    creator = models.ForeignKey(Creator,
-                                help_text='Main researchers involved in the publication, or authors of the publication,'
-                                          'in order of priority. This can be an organisation or a person.',
-                                blank=False, null=False, on_delete=models.PROTECT)
+
+class Title(models.Model):
+    """
+    Name or title of a resource.
+    """
+    publication = models.ForeignKey(Publication, help_text='Publication named by the title.', blank=False, null=False,
+                                    on_delete=models.PROTECT)
+    name = models.CharField(max_length=500, help_text='Name or title of a resource.', blank=False, null=False)
+    type = models.ForeignKey(TitleType, help_text='Type of title.', blank=True, null=True, on_delete=models.PROTECT)
