@@ -101,6 +101,44 @@ class Rights(models.Model):
     scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
 
 
+class FunderIdentifier(models.Model):
+    """
+    Unique identifier of a funding entity, according to various types.
+    """
+    identifier = models.CharField(max_length=200,
+                                  help_text='Unique identifier of a funding entity, according to various types.')
+    type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
+    scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
+
+
+class Award(models.Model):
+    """
+    The code assigned by the funder to a sponsored award (grant).
+    """
+    number = models.CharField(max_length=50, help_text='Code assigned by the funder to a sponsered award (grant).',
+                              blank=False, null=False)
+    uri = models.URLField(help_text='The URI leading to a page provided by the funder for more information about the '
+                                    'award (grant).', blank=True, null=True)
+
+
+class FundingReference(models.Model):
+    """
+    Information about funding or financial information for the resource being registered.
+    """
+    publication = models.ForeignKey(Publication, help_text='Publication to which the funding relates.', blank=False,
+                                    null=False, on_delete=models.PROTECT)
+    funder_name = models.CharField(max_length=200, help_text='Name of the funding provider.', blank=False, null=False)
+    funder_identifier = models.OneToOneField(FunderIdentifier,
+                                             help_text='Unique identifier of a funding entity, according to various '
+                                                       'types.',
+                                             blank=True, null=True, on_delete=models.PROTECT)
+    award_number = models.OneToOneField(Award,
+                                        help_text='The code assigned by the funder to a sponsored award (grant).',
+                                        blank=True, null=True, on_delete=models.PROTECT)
+    award_title = models.CharField(max_length=500, help_text='Human readable name or title of the award (grant).',
+                                   blank=True, null=True)
+
+
 class RelationType(models.Model):
     """
     Description of relationship between resource being registered and related resource.
