@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MinValueValidator, MaxValueValidator
 
 
 # Models below for the publications are based on the DataCite Metadata Schema version 4.3:
@@ -25,6 +26,23 @@ class Identifier(models.Model):
                              null=False, on_delete=models.PROTECT)
 
 
+class ResourceTypeGeneral(models.Model):
+    """
+    General type of a resource.
+    """
+    name = models.CharField(max_length=50, help_text='Type of a resource', blank=False, null=False)
+
+
+class ResourceType(models.Model):
+    """
+    Description of a resource.
+    """
+    description = models.CharField(max_length=50, help_text='Free text description of a resource, preferably one term,'
+                                                            ' description of the resource that can be combined with '
+                                                            'the sub-property.', blank=False, null=False)
+    type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False, null=False)
+
+
 class Publication(models.Model):
     """
     Describes a publication according to the DataCite Metadata Schema version 4.3.
@@ -34,6 +52,30 @@ class Publication(models.Model):
                                       help_text='Unique identifier that identifies a resource. This can relate to a '
                                                 'specific version or all versions.', blank=False, null=False,
                                       on_delete=models.PROTECT)
+    publisher = models.CharField(max_length=500, help_text='The name of the entity that holds, archives, publishes '
+                                                           'prints, distributes, releases, issues, or produces the '
+                                                           'resource. This property will be used to formulate the '
+                                                           'citation, so consider the prominence of the role. For '
+                                                           'software, use Publisher for the code repository. If there '
+                                                           'is an entity other than a code repository, that "holds, '
+                                                           'archives, publishes, prints, distributes, releases, issues,'
+                                                           ' or produces" the code, use the property '
+                                                           'Contributor/contributorType/hostingInstitution for the code'
+                                                           ' repository.', blank=False, null=False)
+    publication_year = models.IntegerField(help_text='The year when the data was or will be made publicly available. '
+                                                     'In the case of resources such as software or dynamic data where '
+                                                     'there may be multiple releases in one year, include the '
+                                                     'Date/dateType/dateInformation property and sub-properties to '
+                                                     'provide more information about the publication or release date '
+                                                     'details. Format: YYYY. If an embargo period has been in effect, '
+                                                     'use the date when the embargo period ends. In the case of '
+                                                     'datasets, "publish" is understood to mean making the 15 data '
+                                                     'available on a specific date to the community of researchers. If '
+                                                     'there is no standard publication year value, use the date that '
+                                                     'would be preferred from a citation perspective. ',
+                                           validators=[MinValueValidator(2016), MaxValueValidator(2050)], blank=False,
+                                           null=False)
+    resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False, null=False, on_delete=models.PROTECT)
 
 
 class NameType(models.Model):
