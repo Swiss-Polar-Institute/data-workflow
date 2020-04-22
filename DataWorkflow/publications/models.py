@@ -81,6 +81,24 @@ class Publication(models.Model):
     size = models.CharField(max_length=50,
                             help_text='Size of resource, free text to include data volume, pages, time etc.',
                             blank=True, null=True)
+    format = models.CharField(max_length=500, help_text='Technical format of a resource.', blank=True, null=True)
+    version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
+
+
+class Rights(models.Model):
+    """
+    Any rights information for a resource. Property may be repeated for complex situations.
+    """
+    publication = models.ForeignKey(Publication, help_text='Publication to which the rights relate.', blank=False,
+                                    null=False, on_delete=models.PROTECT)
+    statement = models.TextField(max_length=1000, help_text='Rights information for a resource.', blank=False,
+                                 null=False)
+    uri = models.URLField(help_text='URI of the license', blank=True, null=True)
+    identifier = models.CharField(max_length=20, help_text='Short, standardised version of the license name.',
+                                  blank=False,
+                                  null=False)
+    identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
+    scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
 
 
 class RelationType(models.Model):
@@ -104,7 +122,8 @@ class RelatedIdentifier(models.Model):
     """
     Globally unique identifiers of related resources.
     """
-    publication = models.ForeignKey(Publication)
+    publication = models.ForeignKey(Publication, help_text='Publication to which the identifier relates.', blank=False,
+                                    null=False, on_delete=models.PROTECT)
     identifier = models.CharField(max_length=200,
                                   help_text='Uniquely identifies an item according to various schemas.', blank=False,
                                   null=False)
