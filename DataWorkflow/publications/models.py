@@ -41,7 +41,7 @@ class ResourceType(models.Model):
                                                             ' description of the resource that can be combined with '
                                                             'the sub-property.', blank=False, null=False)
     type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False,
-                                        null=False)
+                                        null=False, on_delete=models.PROTECT)
 
 
 class Publication(models.Model):
@@ -189,7 +189,7 @@ class Date(models.Model):
     publication = models.ForeignKey(Publication, help_text='Publication to which the date is relevant.', blank=False,
                                     null=False, on_delete=models.PROTECT)
     date = models.DateField(help_text='Date relevant to the work.', blank=False, null=False)
-    type = models.ForeignKey(DateType, help_text='Type of date', blank=False, null=False)
+    type = models.ForeignKey(DateType, help_text='Type of date', blank=False, null=False, on_delete=models.PROTECT)
 
 
 class NameType(models.Model):
