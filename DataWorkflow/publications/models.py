@@ -40,7 +40,8 @@ class ResourceType(models.Model):
     description = models.CharField(max_length=50, help_text='Free text description of a resource, preferably one term,'
                                                             ' description of the resource that can be combined with '
                                                             'the sub-property.', blank=False, null=False)
-    type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False, null=False)
+    type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False,
+                                        null=False)
 
 
 class Publication(models.Model):
@@ -75,7 +76,25 @@ class Publication(models.Model):
                                                      'would be preferred from a citation perspective. ',
                                            validators=[MinValueValidator(2016), MaxValueValidator(2050)], blank=False,
                                            null=False)
-    resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False, null=False, on_delete=models.PROTECT)
+    resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False,
+                                         null=False, on_delete=models.PROTECT)
+
+
+class DateType(models.Model):
+    """
+    Type of date.
+    """
+    name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
+
+
+class Date(models.Model):
+    """
+    Dates relevant to the work.
+    """
+    publication = models.ForeignKey(Publication, help_text='Publication to which the date is relevant.', blank=False,
+                                    null=False, on_delete=models.PROTECT)
+    date = models.DateField(help_text='Date relevant to the work.', blank=False, null=False)
+    type = models.ForeignKey(DateType, help_text='Type of date', blank=False, null=False)
 
 
 class NameType(models.Model):
