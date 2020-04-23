@@ -125,7 +125,7 @@ class Publication(models.Model):
 
         main_creators = Creator.objects.filter(publication=self)
 
-        return main_creators.name
+        return main_creators
 
     def __str__(self):
         return "{} ({}). Version: {}. {}. {}.".format(self.main_title(), self.publication_year, self.version, self.publisher, self.identifier)

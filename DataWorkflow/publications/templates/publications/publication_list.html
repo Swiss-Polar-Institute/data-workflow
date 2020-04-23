@@ -3,7 +3,8 @@
 {% block content %}
     {% for publication in publications %}
         <div class="publication">
-            <h1>{{ publication.main_title }}</h1>
+            <h1><a href="{% url 'publication_detail' pk=publication.pk %}">{{ publication.main_title }}</a></h1>
+            <p>{% for creator in publication.main_creators %}{{ creator.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
             <h2><a href="">{{ publication.identifier }}</a></h2>
             <div class="date">
             <p>Published on: {{ publication.publication_year }}</p>
