@@ -1,4 +1,5 @@
-from django.db import models
+from django.core.exceptions import ValidationError
+from django.db import models, transaction
 from django.core.validators import MinValueValidator, MaxValueValidator
 
 
@@ -103,6 +104,19 @@ class Publication(models.Model):
 
     def __str__(self):
         return "({}). Version: {}. {}. {}.".format(self.publication_year, self.version, self.publisher, self.identifier)
+
+    def save(self, *args, **kwargs):
+        if not hasattr(self, 'title'):
+            raise ValidationError('Publication needs to have a title')
+
+        with transaction.atomic():
+            super().save(*args, **kwargs)
+
+            title = Title()
+            title.name = getattr(self, 'title')
+            title.type = getattr(self, 'type')
+            title.publication = self
+            title.save()
 
 
 class Size(models.Model):
