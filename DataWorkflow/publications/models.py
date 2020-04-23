@@ -178,7 +178,7 @@ class DateType(models.Model):
     Type of date.
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
-    
+
 
 class Date(models.Model):
     """

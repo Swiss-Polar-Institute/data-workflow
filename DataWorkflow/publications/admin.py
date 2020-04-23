@@ -64,13 +64,13 @@ class RelatedIdentifierAdmin(admin.ModelAdmin):
 
 
 class DateTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'information', )
-    ordering = ['name', 'information', ]
+    list_display = ('name', )
+    ordering = ['name', ]
 
 
 class DateAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'date', 'type', )
-    ordering = ['publication', 'date', 'type', ]
+    list_display = ('publication', 'date', 'type', 'information', )
+    ordering = ['publication', 'date', 'type', 'information', ]
 
 
 class NameTypeAdmin(admin.ModelAdmin):
