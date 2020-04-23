@@ -30,7 +30,7 @@ class Identifier(models.Model):
                              null=False, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{} ({})".format(self.uri, self.type)
+        return "{} {}".format(self.type, self.uri)
 
 
 class ResourceTypeGeneral(models.Model):
@@ -102,9 +102,6 @@ class Publication(models.Model):
                                          null=False, on_delete=models.PROTECT)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
-    def __str__(self):
-        return "({}). Version: {}. {}. {}.".format(self.publication_year, self.version, self.publisher, self.identifier)
-
     def save(self, *args, **kwargs):
         if not hasattr(self, 'title'):
             raise ValidationError('Publication needs to have a title')
@@ -123,6 +120,15 @@ class Publication(models.Model):
         main_title = Title.objects.get(publication=self, type=None)
 
         return main_title.name
+
+    def main_creators(self):
+
+        main_creators = Creator.objects.filter(publication=self)
+
+        return main_creators.name
+
+    def __str__(self):
+        return "{} ({}). Version: {}. {}. {}.".format(self.main_title(), self.publication_year, self.version, self.publisher, self.identifier)
 
 
 class Size(models.Model):
@@ -371,7 +377,7 @@ class NameIdentifier(AbstractIdentifier):
     """
 
     def __str__(self):
-        return "{} {}".format(self.identifier, self.identifier_schema)
+        return "{} {}".format(self.identifier_schema, self.identifier)
 
 
 class AffiliationIdentifier(AbstractIdentifier):
@@ -380,7 +386,7 @@ class AffiliationIdentifier(AbstractIdentifier):
     """
 
     def __str__(self):
-        return "{} {}".format(self.identifier, self.identifier_schema)
+        return "{} {}".format(self.identifier_schema, self.identifier)
 
 
 class Affiliation(models.Model):
