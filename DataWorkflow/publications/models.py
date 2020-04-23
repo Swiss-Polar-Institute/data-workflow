@@ -178,9 +178,7 @@ class DateType(models.Model):
     Type of date.
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
-    information = models.CharField(max_length=500, help_text='Free text information about a date.', blank=True,
-                                   null=True)
-
+    
 
 class Date(models.Model):
     """
@@ -190,6 +188,8 @@ class Date(models.Model):
                                     null=False, on_delete=models.PROTECT)
     date = models.DateField(help_text='Date relevant to the work.', blank=False, null=False)
     type = models.ForeignKey(DateType, help_text='Type of date', blank=False, null=False, on_delete=models.PROTECT)
+    information = models.CharField(max_length=500, help_text='Free text information about a date.', blank=True,
+                                   null=True)
 
 
 class NameType(models.Model):
