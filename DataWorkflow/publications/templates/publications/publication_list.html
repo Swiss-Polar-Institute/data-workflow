@@ -3,6 +3,7 @@
 {% block content %}
     {% for publication in publications %}
         <div class="publication">
+            <h1>{{ publication.main_title }}</h1>
             <h2><a href="">{{ publication.identifier }}</a></h2>
             <div class="date">
             <p>Published on: {{ publication.publication_year }}</p>

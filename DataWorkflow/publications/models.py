@@ -118,6 +118,12 @@ class Publication(models.Model):
             title.publication = self
             title.save()
 
+    def main_title(self):
+
+        main_title = Title.objects.get(publication=self, type=None)
+
+        return main_title.name
+
 
 class Size(models.Model):
     """
