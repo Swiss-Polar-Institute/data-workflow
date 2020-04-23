@@ -14,6 +14,9 @@ class IdentifierType(models.Model):
 
     name = models.CharField(help_text='Name of an identifier type', max_length=50, blank=False, null=False)
 
+    def __str__(self):
+        return "{}".format(self.name)
+
 
 class Identifier(models.Model):
     """
@@ -25,13 +28,20 @@ class Identifier(models.Model):
     type = models.ForeignKey(IdentifierType, help_text='Type of identifier', blank=False,
                              null=False, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return "{} ({})".format(self.uri, self.type)
+
 
 class ResourceTypeGeneral(models.Model):
     """
     General type of a resource.
     """
     name = models.CharField(max_length=50, help_text='Type of a resource', blank=False, null=False)
-    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.')
+
+    def __str__(self):
+        return "{} - {}".format(self.name, self.description)
 
 
 class ResourceType(models.Model):
@@ -43,6 +53,9 @@ class ResourceType(models.Model):
                                                             'the sub-property.', blank=False, null=False)
     type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False,
                                         null=False, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{}/{}".format(self.type_general, self.description)
 
 
 class Publication(models.Model):
@@ -81,6 +94,9 @@ class Publication(models.Model):
                                          null=False, on_delete=models.PROTECT)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
+    def __str__(self):
+        return "({}). Version: {}. {}. {}.".format(self.publication_year, self.version, self.publisher, self.identifier)
+
 
 class Size(models.Model):
     """
@@ -93,14 +109,21 @@ class Size(models.Model):
                             help_text='Size of resource. Free text to include data volume, pages, time etc.',
                             blank=True, null=True)
 
+    def __str__(self):
+        return "{}".format(self.size)
+
 
 class Format(models.Model):
     """
     Technical format of a resource.
     """
-    publication = models.ForeignKey(Publication, help_text='Publication described by a format.', blank=False, null=False,
+    publication = models.ForeignKey(Publication, help_text='Publication described by a format.', blank=False,
+                                    null=False,
                                     on_delete=models.PROTECT)
     format = models.CharField(max_length=100, help_text='Technical format of a resource.', blank=True, null=True)
+
+    def __str__(self):
+        return "{}".format(self.format)
 
 
 class Rights(models.Model):
@@ -118,6 +141,9 @@ class Rights(models.Model):
     identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
     scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
 
+    def __str__(self):
+        return "{}. The full text of {} can be found at {}.".format(self.statement, self.identifier, self.uri)
+
     class Meta:
         verbose_name_plural = 'Rights'
 
@@ -131,6 +157,9 @@ class FunderIdentifier(models.Model):
     type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
     scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
 
+    def __str__(self):
+        return "{} ({})".format(self.identifier, self.type)
+
 
 class Award(models.Model):
     """
@@ -140,6 +169,9 @@ class Award(models.Model):
                               blank=False, null=False)
     uri = models.URLField(help_text='The URI leading to a page provided by the funder for more information about the '
                                     'award (grant).', blank=True, null=True)
+
+    def __str__(self):
+        return "{}".format(self.number)
 
 
 class FundingReference(models.Model):
@@ -159,6 +191,9 @@ class FundingReference(models.Model):
     award_title = models.CharField(max_length=500, help_text='Human readable name or title of the award (grant).',
                                    blank=True, null=True)
 
+    def __str__(self):
+        return "{}. {} ({})".format(self.funder_name, self.award_title, self.award_number)
+
 
 class RelationType(models.Model):
     """
@@ -168,7 +203,11 @@ class RelationType(models.Model):
                             help_text='Description of relationship between resource being registered and related '
                                       'resource.',
                             blank=False, null=False)
-    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.')
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class RelatedIdentifierType(models.Model):
@@ -176,7 +215,11 @@ class RelatedIdentifierType(models.Model):
     Type of related identifier
     """
     name = models.CharField(max_length=50, help_text='Type of related identifier')
-    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.')
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class RelatedIdentifier(models.Model):
@@ -195,13 +238,20 @@ class RelatedIdentifier(models.Model):
                                                 'related resource.',
                                       blank=False, null=False, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return "{} {} ({})".format(self.relation_type, self.identifier, self.related_identifier_type)
+
 
 class DateType(models.Model):
     """
     Type of date.
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
-    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.')
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Date(models.Model):
@@ -215,12 +265,18 @@ class Date(models.Model):
     information = models.CharField(max_length=500, help_text='Free text information about a date.', blank=True,
                                    null=True)
 
+    def __str__(self):
+        return "{}: {}".format(self.type, self.date)
+
 
 class NameType(models.Model):
     """
     Type of name.
     """
     name = models.CharField(max_length=50, help_text='Type of name', blank=False, null=False)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class CreatorName(models.Model):
@@ -232,6 +288,9 @@ class CreatorName(models.Model):
                                       'given name. Non-roman names may be transliterated according to ALA-LC schemas.',
                             blank=False, null=False)
     type = models.ForeignKey(NameType, help_text='The type of name.', blank=True, null=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class AbstractIdentifier(models.Model):
@@ -257,11 +316,17 @@ class NameIdentifier(AbstractIdentifier):
     Uniquely identifies an individual or organisation according to various schemas.
     """
 
+    def __str__(self):
+        return "{} {}".format(self.identifier, self.identifier_schema)
+
 
 class AffiliationIdentifier(AbstractIdentifier):
     """
     Uniquely identifies the organisational affiliation of the creator
     """
+
+    def __str__(self):
+        return "{} {}".format(self.identifier, self.identifier_schema)
 
 
 class Affiliation(models.Model):
@@ -275,6 +340,9 @@ class Affiliation(models.Model):
     identifier = models.OneToOneField(AffiliationIdentifier, max_length=200,
                                       help_text='Uniquely identifies the organisational affiliation of the creator.',
                                       blank=True, null=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Creator(models.Model):
@@ -299,12 +367,18 @@ class Creator(models.Model):
                                     help_text='Organisational or institutional affiliation of the creator.', blank=True,
                                     null=True, on_delete=models.PROTECT)
 
+    def __str__(self):
+        return "{} {}. {}.".format(self.given_name, self.family_name, self.affiliation)
+
 
 class TitleType(models.Model):
     """
     Type of title of resource.
     """
     name = models.CharField(max_length=50, help_text='Type of title.', blank=False, null=False)
+
+    def __str__(self):
+        return "{}".format(self.name)
 
 
 class Title(models.Model):
@@ -315,3 +389,6 @@ class Title(models.Model):
                                     on_delete=models.PROTECT)
     name = models.CharField(max_length=500, help_text='Name or title of a resource.', blank=False, null=False)
     type = models.ForeignKey(TitleType, help_text='Type of title.', blank=True, null=True, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{}".format(self.name)
