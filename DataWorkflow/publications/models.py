@@ -454,4 +454,4 @@ class Title(models.Model):
         return "{}".format(self.name)
 
     class Meta:
-        unique_together = (('publication', 'name', 'type'),)
+        unique_together = (('publication', 'type'),)
