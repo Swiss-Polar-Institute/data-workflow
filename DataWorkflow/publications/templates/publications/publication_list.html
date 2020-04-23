@@ -1,20 +1,13 @@
-{% load static %}
-<html lang="en">
-<head>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="{% static 'css/publications.css' %}">
-    <link href="//fonts.googleapis.com/css?family=Lobster&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-    <meta charset="UTF-8">
-    <title>Publications</title>
-</head>
-<body>
-{% for publication in publications %}
-    <div class="publication">
-        <h2><a href="">{{ publication.identifier }}</a></h2>
-        <p>Published on: {{ publication.publication_year }}</p>
-        <p>Version: {{ publication.version }}</p>
-    </div>
-{% endfor %}
-</body>
-</html>
+{% extends 'publications/base.html' %}
+
+{% block content %}
+    {% for publication in publications %}
+        <div class="publication">
+            <h2><a href="">{{ publication.identifier }}</a></h2>
+            <div class="date">
+            <p>Published on: {{ publication.publication_year }}</p>
+            </div>
+            <p>Version: {{ publication.version }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
