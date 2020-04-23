@@ -38,7 +38,8 @@ class ResourceTypeGeneral(models.Model):
     """
     name = models.CharField(max_length=50, help_text='Type of a resource', blank=False, null=False, unique=True)
     description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.')
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
 
     def __str__(self):
         return "{} - {}".format(self.name, self.description)
@@ -116,7 +117,7 @@ class Size(models.Model):
         return "{}".format(self.size)
 
     class Meta:
-        unique_together = (('publication', 'size'), )
+        unique_together = (('publication', 'size'),)
 
 
 class Format(models.Model):
@@ -132,7 +133,7 @@ class Format(models.Model):
         return "{}".format(self.format)
 
     class Meta:
-        unique_together = (('publication', 'format'), )
+        unique_together = (('publication', 'format'),)
 
 
 class Rights(models.Model):
@@ -155,7 +156,7 @@ class Rights(models.Model):
 
     class Meta:
         verbose_name_plural = 'Rights'
-        unique_together = (('publication', 'identifier'), )
+        unique_together = (('publication', 'identifier'),)
 
 
 class FunderIdentifier(models.Model):
@@ -163,7 +164,8 @@ class FunderIdentifier(models.Model):
     Unique identifier of a funding entity, according to various types.
     """
     identifier = models.CharField(max_length=200,
-                                  help_text='Unique identifier of a funding entity, according to various types.', unique=True)
+                                  help_text='Unique identifier of a funding entity, according to various types.',
+                                  unique=True)
     type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
     scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
 
@@ -184,7 +186,7 @@ class Award(models.Model):
         return "{}".format(self.number)
 
     class Meta:
-        unique_together = (('number', 'uri'), )
+        unique_together = (('number', 'uri'),)
 
 
 class FundingReference(models.Model):
@@ -208,7 +210,7 @@ class FundingReference(models.Model):
         return "{}. {} ({})".format(self.funder_name, self.award_title, self.award_number)
 
     class Meta:
-        unique_together = (('publication', 'funder_name', 'award_number'), )
+        unique_together = (('publication', 'funder_name', 'award_number'),)
 
 
 class RelationType(models.Model):
@@ -220,7 +222,8 @@ class RelationType(models.Model):
                                       'resource.',
                             blank=False, null=False, unique=True)
     description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.', blank=False, null=False)
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -232,7 +235,8 @@ class RelatedIdentifierType(models.Model):
     """
     name = models.CharField(max_length=50, help_text='Type of related identifier', blank=False, null=False, unique=True)
     description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.', blank=False, null=False)
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -258,7 +262,7 @@ class RelatedIdentifier(models.Model):
         return "{} {} ({})".format(self.relation_type, self.identifier, self.related_identifier_type)
 
     class Meta:
-        unique_together = (('publication', 'identifier'), )
+        unique_together = (('publication', 'identifier'),)
 
 
 class DateType(models.Model):
@@ -267,7 +271,8 @@ class DateType(models.Model):
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False, unique=True)
     description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.', blank=False, null=False)
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
 
     def __str__(self):
         return "{}".format(self.name)
@@ -288,7 +293,7 @@ class Date(models.Model):
         return "{}: {}".format(self.type, self.date)
 
     class Meta:
-        unique_together = (('publication', 'date', 'type'), )
+        unique_together = (('publication', 'date', 'type'),)
 
 
 class NameType(models.Model):
@@ -315,7 +320,7 @@ class CreatorName(models.Model):
         return "{}".format(self.name)
 
     class Meta:
-        unique_together = (('name', 'type'), )
+        unique_together = (('name', 'type'),)
 
 
 class AbstractIdentifier(models.Model):
@@ -334,7 +339,7 @@ class AbstractIdentifier(models.Model):
 
     class Meta:
         abstract = True
-        unique_together = (('identifier', 'identifier_schema'), )
+        unique_together = (('identifier', 'identifier_schema'),)
 
 
 class NameIdentifier(AbstractIdentifier):
@@ -371,7 +376,7 @@ class Affiliation(models.Model):
         return "{}".format(self.name)
 
     class Meta:
-        unique_together = (('name', 'identifier'), )
+        unique_together = (('name', 'identifier'),)
 
 
 class Creator(models.Model):
@@ -400,7 +405,7 @@ class Creator(models.Model):
         return "{} {}. {}.".format(self.given_name, self.family_name, self.affiliation)
 
     class Meta:
-        unique_together = (('publication', 'name', 'affiliation'), )
+        unique_together = (('publication', 'name', 'affiliation'),)
 
 
 class TitleType(models.Model):
@@ -426,4 +431,4 @@ class Title(models.Model):
         return "{}".format(self.name)
 
     class Meta:
-        unique_together = (('publication', 'name', 'type'), )
+        unique_together = (('publication', 'name', 'type'),)

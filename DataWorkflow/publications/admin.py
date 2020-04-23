@@ -14,8 +14,8 @@ class IdentifierAdmin(admin.ModelAdmin):
 
 
 class ResourceTypeGeneralAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    ordering = ['name', ]
+    list_display = ('name', 'description', )
+    ordering = ['name', 'description', ]
 
 
 class ResourceTypeAdmin(admin.ModelAdmin):
@@ -59,13 +59,13 @@ class FundingReferenceAdmin(admin.ModelAdmin):
 
 
 class RelationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    ordering = ['name', ]
+    list_display = ('name', 'description', )
+    ordering = ['name', 'description', ]
 
 
 class RelatedIdentifierTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    ordering = ['name', ]
+    list_display = ('name', 'description', )
+    ordering = ['name', 'description', ]
 
 
 class RelatedIdentifierAdmin(admin.ModelAdmin):
@@ -74,8 +74,8 @@ class RelatedIdentifierAdmin(admin.ModelAdmin):
 
 
 class DateTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
-    ordering = ['name', ]
+    list_display = ('name', 'description', )
+    ordering = ['name', 'description', ]
 
 
 class DateAdmin(admin.ModelAdmin):
