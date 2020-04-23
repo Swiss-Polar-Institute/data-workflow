@@ -24,8 +24,13 @@ class ResourceTypeAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'publisher', 'publication_year', 'resource_type', 'size', 'format', 'version', )
-    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'size', 'format', 'version', ]
+    list_display = ('identifier', 'publisher', 'publication_year', 'resource_type', 'format', 'version', )
+    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'format', 'version', ]
+
+
+class SizeAdmin(admin.ModelAdmin):
+    list_display = ('publication', 'size', )
+    ordering = ['publication', 'size', ]
 
 
 class RightsAdmin(admin.ModelAdmin):
@@ -118,6 +123,7 @@ admin.site.register(publications.models.Identifier, IdentifierAdmin)
 admin.site.register(publications.models.ResourceTypeGeneral, ResourceTypeGeneralAdmin)
 admin.site.register(publications.models.ResourceType, ResourceTypeAdmin)
 admin.site.register(publications.models.Publication, PublicationAdmin)
+admin.site.register(publications.models.Size, SizeAdmin)
 admin.site.register(publications.models.Rights, RightsAdmin)
 admin.site.register(publications.models.FunderIdentifier, FunderIdentifierAdmin)
 admin.site.register(publications.models.Award, AwardAdmin)
