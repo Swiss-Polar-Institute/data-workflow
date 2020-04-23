@@ -2,6 +2,7 @@
 
 {% block content %}
     <div class="publication">
+        <a class="btn btn-default" href="{% url 'publication_edit' pk=post.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
         <h1>{{ publication.main_title }}</h1>
     </div>
 {% endblock %}

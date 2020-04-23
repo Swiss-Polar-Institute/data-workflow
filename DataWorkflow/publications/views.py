@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Publication
 from .forms import PublicationForm
 
@@ -18,6 +18,26 @@ def publication_detail(request, pk):
 
 
 def publication_new(request):
-    form = PublicationForm()
+    if request.method == "POST":
+        form = PublicationForm(request.POST)
+        if form.is_valid():
+            publication = form.save(commit=False)
+            publication.save()
+            return redirect('publication_detail', pk=publication.pk)
+    else:
+        form = PublicationForm()
+    return render(request, 'publications/publication_edit.html', {'form': form})
+
+
+def publication_edit(request, pk):
+    publication = get_object_or_404(Publication, pk=pk)
+    if request.method == "POST":
+        form = PublicationForm(request.POST, instance=publication)
+        if form.is_valid():
+            publication = form.save(commit=False)
+            publication.save()
+            return redirect('publication_detail', pk=publication.pk)
+    else:
+        form = PublicationForm(instance=publication)
     return render(request, 'publications/publication_edit.html', {'form': form})
 
