@@ -31,6 +31,7 @@ class ResourceTypeGeneral(models.Model):
     General type of a resource.
     """
     name = models.CharField(max_length=50, help_text='Type of a resource', blank=False, null=False)
+    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
 
 
 class ResourceType(models.Model):
@@ -167,6 +168,7 @@ class RelationType(models.Model):
                             help_text='Description of relationship between resource being registered and related '
                                       'resource.',
                             blank=False, null=False)
+    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
 
 
 class RelatedIdentifierType(models.Model):
@@ -174,6 +176,7 @@ class RelatedIdentifierType(models.Model):
     Type of related identifier
     """
     name = models.CharField(max_length=50, help_text='Type of related identifier')
+    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
 
 
 class RelatedIdentifier(models.Model):
@@ -198,6 +201,7 @@ class DateType(models.Model):
     Type of date.
     """
     name = models.CharField(max_length=50, help_text='Type of date.', blank=False, null=False)
+    description = models.TextField(max_length=1000, help_text='Description of type according to DataCite Metadata Schema v4.3.')
 
 
 class Date(models.Model):
