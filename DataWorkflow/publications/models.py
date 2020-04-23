@@ -117,6 +117,9 @@ class Rights(models.Model):
     identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
     scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
 
+    class Meta:
+        verbose_name_plural = 'Rights'
+
 
 class FunderIdentifier(models.Model):
     """
