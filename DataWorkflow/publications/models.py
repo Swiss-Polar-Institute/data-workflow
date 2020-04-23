@@ -78,11 +78,20 @@ class Publication(models.Model):
                                            null=False)
     resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False,
                                          null=False, on_delete=models.PROTECT)
-    size = models.CharField(max_length=50,
-                            help_text='Size of resource, free text to include data volume, pages, time etc.',
-                            blank=True, null=True)
     format = models.CharField(max_length=500, help_text='Technical format of a resource.', blank=True, null=True)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
+
+
+class Size(models.Model):
+    """
+    Size of resource. Free text to include data volume, pages, time etc.
+    """
+    publication = models.ForeignKey(Publication,
+                                    help_text='Publication described by the size.', blank=False, null=False,
+                                    on_delete=models.PROTECT)
+    size = models.CharField(max_length=50,
+                            help_text='Size of resource. Free text to include data volume, pages, time etc.',
+                            blank=True, null=True)
 
 
 class Rights(models.Model):
