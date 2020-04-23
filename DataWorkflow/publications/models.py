@@ -44,6 +44,9 @@ class ResourceTypeGeneral(models.Model):
     def __str__(self):
         return "{} - {}".format(self.name, self.description)
 
+    class Meta:
+        verbose_name_plural = 'Resource types general'
+
 
 class ResourceType(models.Model):
     """
