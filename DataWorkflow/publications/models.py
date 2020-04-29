@@ -416,7 +416,7 @@ class Creator(models.Model):
     """
     publication = models.ManyToManyField(Publication,
                                     help_text='Publication in which this creator has been involved or authored.',
-                                    blank=False, null=False)
+                                    blank=False)
     name = models.OneToOneField(CreatorName, help_text='Creator of the publication.', blank=False, null=False,
                                 on_delete=models.PROTECT)
     given_name = models.CharField(max_length=50, help_text='Personal or first name of the creator.', blank=True,
