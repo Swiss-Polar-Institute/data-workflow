@@ -24,7 +24,7 @@ class ResourceTypeAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'publisher', 'publication_year', 'resource_type', 'version', )
+    list_display = ('main_title', 'identifier', 'publisher', 'publication_year', 'resource_type', 'version', )
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', ]
 
 

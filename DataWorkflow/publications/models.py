@@ -1,4 +1,4 @@
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.db import models, transaction
 from django.core.validators import MinValueValidator, MaxValueValidator
 
@@ -117,7 +117,10 @@ class Publication(models.Model):
 
     def main_title(self):
 
-        main_title = Title.objects.get(publication=self, type=None)
+        try:
+            main_title = Title.objects.get(publication=self, type__name='MainTitle')
+        except ObjectDoesNotExist:
+            return "Unknown title"
 
         return main_title.name
 
@@ -454,7 +457,7 @@ class Title(models.Model):
     publication = models.ForeignKey(Publication, help_text='Publication named by the title.', blank=False, null=False,
                                     on_delete=models.PROTECT)
     name = models.CharField(max_length=500, help_text='Name or title of a resource.', blank=False, null=False)
-    type = models.ForeignKey(TitleType, help_text='Type of title.', blank=True, null=True, on_delete=models.PROTECT)
+    type = models.ForeignKey(TitleType, help_text='Type of title.', blank=False, null=False, on_delete=models.PROTECT)
 
     def __str__(self):
         return "{}".format(self.name)
