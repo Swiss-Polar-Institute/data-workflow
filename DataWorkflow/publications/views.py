@@ -5,6 +5,9 @@ from .forms import PublicationForm
 
 # Create your views here.
 
+def home(request):
+    return render(request, 'publications/home.html')
+
 def publication_list(request):
 
     publications = Publication.objects.all()
