@@ -1,15 +1,51 @@
 {% extends 'publications/base.html' %}
 
 {% block content %}
-    {% for publication in publications %}
-        <div class="publication">
-            <h1><a href="{% url 'publication_detail' pk=publication.pk %}">{{ publication.main_title }}</a></h1>
-            <p>{% for creator in publication.main_creators %}{{ creator.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
-            <h2><a href="">{{ publication.identifier }}</a></h2>
-            <div class="date">
-            <p>Published on: {{ publication.publication_year }}</p>
-            </div>
-            <p>Version: {{ publication.version }}</p>
-        </div>
-    {% endfor %}
+    <table id="species" class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Creators</th>
+            <th>Publication Year</th>
+            <th>Resource Type</th>
+            <th>Identifier</th>
+            <th>Version</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for publication in publications %}
+            <tr>
+                <td><a href="{% url 'publication_detail' pk=publication.pk %}">{{ publication.main_title }}</a></td>
+                <td>{% for creator in publication.main_creators %}{{ creator.name }}{% if not forloop.last %},
+                {% endif %}{% endfor %}</td>
+                <td>{{ publication.publication_year }}</td>
+                <td>{{ publication.resource_type }}</td>
+                <td>{{ publication.identifier }}</td>
+                <td>{{ publication.version }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 {% endblock %}
+
+<script>
+    $(document).ready(function () {
+        $('#species').DataTable({
+            "pageLength": 50,
+            "order": [[1, "asc"]]
+        });
+    });
+</script>
+</body>
+</html>
+{#            <h1><a href="{% url 'publication_detail' pk=publication.pk %}">{{ publication.main_title }}</a></h1>#}
+{#            <p>{% for creator in publication.main_creators %}{{ creator.name }}{% if not forloop.last %},#}
+{#            {% endif %}{% endfor %}</p>#}
+{#            <h2><a href="">{{ publication.identifier }}</a></h2>#}
+{#            <div class="date">#}
+{#                <p>Published on: {{ publication.publication_year }}</p>#}
+{#            </div>#}
+{#            <p>Version: {{ publication.version }}</p>#}
+{#        </div>#}
+{#    {% endfor %}#}
+{#{% endblock %}#}
