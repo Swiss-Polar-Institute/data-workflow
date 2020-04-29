@@ -15,7 +15,7 @@
         <tbody>
         {% for creator in creators %}
             <tr>
-                <td><a href="{% url 'creator_detail' pk=publication.pk %}">{{ creator.name }}</a></td>
+                <td><a href="{% url 'creator_detail' pk=creator.pk %}">{{ creator.name }}</a></td>
                 <td>{{ creator.given_name }}</td>
                 <td>{{ creator.family_name }}</td>
                 <td>{% for name_identifier in creator.main_name_identifiers %}{{ name_identifier.identifier }}

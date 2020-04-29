@@ -49,3 +49,8 @@ def creator_list(request):
     return render(request, 'publications/creator_list.html', {'creators': creators})
 
 
+def creator_detail(request, pk):
+    creator = get_object_or_404(Creator, pk=pk)
+    return render(request, 'publications/creator_detail.html', {'creator': creator})
+
+

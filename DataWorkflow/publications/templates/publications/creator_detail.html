@@ -1,0 +1,12 @@
+{% extends 'publications/base.html' %}
+
+{% block content %}
+    <h2>{{ creator.name }}</h2>
+    <p>Given name: {{ creator.given_name }} Surname: {{ creator.family_name }}</p>
+    <p>Identifier: {% for name_identifier in creator.main_name_identifiers %}{{ name_identifier.identifier }} {{ name_identifier.identifier_schema }}
+                    {% if not forloop.last %},
+                    {% endif %}{% endfor %}</p>
+    <p>Affiliation: {% for affiliation in creator.main_affiliations %}{{ affiliation.name }}{% if not forloop.last %},
+                {% endif %}{% endfor %}</p>
+    <a class="btn btn-primary btn" href="{% url 'creator_list' %}">Back to list of creators</a>
+{% endblock %}
