@@ -3,7 +3,7 @@
 {% block content %}
     <h2>{{ publication.title }}</h2>
     <form method="POST" class="post-form">{% csrf_token %}
-        {{ form.as_p }}
+        <table>{{ form.as_table }}</table>
         <button type="submit" class="save btn btn-primary btn-sm">Save</button>
     </form>
     <a class="btn btn-primary btn" href="{% url 'publication_list' %}">Back to publication list</a>

@@ -41,3 +41,6 @@ def publication_edit(request, pk):
         form = PublicationForm(instance=publication)
     return render(request, 'publications/publication_edit.html', {'form': form})
 
+
+
+
