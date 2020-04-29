@@ -419,7 +419,7 @@ class Creator(models.Model):
     Main researchers involved in the publication, or authors of the publication, in order of priority. This can be an
     organisation or a person.
     """
-    publication = models.ForeignKey(Publication,
+    publication = models.ManyToManyField(Publication,
                                     help_text='Publication in which this creator has been involved or authored.',
                                     blank=False, null=False, on_delete=models.PROTECT)
     name = models.OneToOneField(CreatorName, help_text='Creator of the publication.', blank=False, null=False,
