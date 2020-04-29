@@ -43,7 +43,7 @@ class ResourceTypeGeneral(models.Model):
                                    blank=False, null=False)
 
     def __str__(self):
-        return "{} - {}".format(self.name, self.description)
+        return "{}".format(self.name)
 
     class Meta:
         verbose_name_plural = 'Resource types general'
@@ -60,7 +60,7 @@ class ResourceType(models.Model):
                                         null=False, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{}/{}".format(self.type_general, self.description)
+        return "{}".format(self.type_general)
 
     class Meta:
         unique_together = (('description', 'type_general'),)
