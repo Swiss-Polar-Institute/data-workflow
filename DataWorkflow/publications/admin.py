@@ -115,7 +115,7 @@ class CreatorAdmin(admin.ModelAdmin):
     def publication_list(self, obj):
         publications = obj.publication.all()
 
-        return ", ".join([publication.identifier_id for publication in publications])
+        return ", ".join([publication.identifier.uri for publication in publications])
 
 
 class TitleTypeAdmin(admin.ModelAdmin):

@@ -112,11 +112,6 @@ class Publication(models.Model):
             Title.objects.update_or_create(
                 publication=self, type=getattr(self, 'title_type'), defaults={'name':getattr(self, 'title')}
             )
-            # title = Title()
-            # title.name = getattr(self, 'title')
-            # title.type = getattr(self, 'title_type')
-            # title.publication = self
-            # title.save()
 
     def main_title(self):
 
@@ -441,7 +436,7 @@ class Creator(models.Model):
         publication_identifiers = []
 
         for publication in publications:
-            publication_identifiers.append(publication.identifier)
+            publication_identifiers.append(publication.identifier.uri)
 
         publication_str = ";".join(publication_identifiers)
 
