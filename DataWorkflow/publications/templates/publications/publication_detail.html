@@ -9,4 +9,5 @@
     <p>Type of resource: {{ publication.resource_type }}</p>
     <p>{{ publication.identifier }}</p>
     <p>Version: {{ publication.version }}</p>
+    <a class="btn btn-primary btn" href="{% url 'publication_list' %}">Back to publication list</a>
 {% endblock %}
