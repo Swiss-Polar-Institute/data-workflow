@@ -15,14 +15,14 @@
         <tbody>
         {% for creator in creators %}
             <tr>
-                <td>{{ creator.name }}</td>
+                <td><a href="{% url 'creator_detail' pk=publication.pk %}">{{ creator.name }}</a></td>
                 <td>{{ creator.given_name }}</td>
                 <td>{{ creator.family_name }}</td>
-                <td>{% for affiliation in creator.main_affiliations %}{{ affiliation.name }}{% if not forloop.last %},
-                {% endif %}{% endfor %}</td>
                 <td>{% for name_identifier in creator.main_name_identifiers %}{{ name_identifier.identifier }}
                     {% if not forloop.last %},
                     {% endif %}{% endfor %}</td>
+                <td>{% for affiliation in creator.main_affiliations %}{{ affiliation.name }}{% if not forloop.last %},
+                {% endif %}{% endfor %}</td>
             </tr>
         {% endfor %}
         </tbody>
