@@ -437,7 +437,15 @@ class Creator(models.Model):
                                     null=True, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{} {}. {}.".format(self.given_name, self.family_name, self.affiliation)
+        publications = self.publication.all()
+        publication_identifiers = []
+
+        for publication in publications:
+            publication_identifiers.append(publication.identifier)
+
+        publication_str = ";".join(publication_identifiers)
+
+        return "{} {}. {}. Publications:{}".format(self.given_name, self.family_name, self.affiliation, publication_str)
 
     class Meta:
         unique_together = (('name', 'affiliation'),)
