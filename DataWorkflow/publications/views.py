@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from .models import Publication
+from .models import Publication, Creator
 from .forms import PublicationForm
 
 
@@ -42,5 +42,10 @@ def publication_edit(request, pk):
     return render(request, 'publications/publication_edit.html', {'form': form})
 
 
+def creator_list(request):
+
+    creators = Creator.objects.all()
+
+    return render(request, 'publications/creator_list.html', {'creators': creators})
 
 

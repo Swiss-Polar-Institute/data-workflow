@@ -442,6 +442,19 @@ class Creator(models.Model):
 
         return "{} {}. {}. Publications:{}".format(self.given_name, self.family_name, self.affiliation, publication_str)
 
+    def main_name_identifiers(self):
+
+        main_name_identifiers = NameIdentifier.objects.filter(creator=self)
+
+        return main_name_identifiers
+
+    def main_affiliations(self):
+
+        main_affiliations = Affiliation.objects.filter(creator=self)
+
+        return main_affiliations
+
+
     class Meta:
         unique_together = (('name', 'affiliation'),)
 
