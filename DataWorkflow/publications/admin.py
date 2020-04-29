@@ -109,8 +109,8 @@ class AffiliationAdmin(admin.ModelAdmin):
 
 
 class CreatorAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'name', 'given_name', 'family_name', 'name_identifier', 'affiliation', )
-    ordering = ['publication', 'name', 'given_name', 'family_name', 'name_identifier', 'affiliation', ]
+    list_display = ('name', 'given_name', 'family_name', 'name_identifier', 'affiliation', )
+    ordering = ['name', 'given_name', 'family_name', 'name_identifier', 'affiliation', ]
 
 
 class TitleTypeAdmin(admin.ModelAdmin):
