@@ -109,11 +109,14 @@ class Publication(models.Model):
         with transaction.atomic():
             super().save(*args, **kwargs)
 
-            title = Title()
-            title.name = getattr(self, 'title')
-            title.type = getattr(self, 'type')
-            title.publication = self
-            title.save()
+            Title.objects.update_or_create(
+                publication=self, type=getattr(self, 'title_type'), defaults={'name':getattr(self, 'title')}
+            )
+            # title = Title()
+            # title.name = getattr(self, 'title')
+            # title.type = getattr(self, 'title_type')
+            # title.publication = self
+            # title.save()
 
     def main_title(self):
 

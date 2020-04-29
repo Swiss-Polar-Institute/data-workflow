@@ -1,8 +1,12 @@
 {% extends 'publications/base.html' %}
 
 {% block content %}
-    <div class="publication">
-        <a class="btn btn-default" href="{% url 'publication_edit' pk=publication.pk %}"><span class="glyphicon glyphicon-pencil"></span></a>
-        <h1>{{ publication.main_title }}</h1>
-    </div>
+    <h2>{{ publication.main_title }} <a class="btn btn-primary btn-sm"
+                                            href="{% url 'publication_edit' pk=publication.pk %}">edit</a></h2>
+    <p>Publication creators: {% for creator in publication.main_creators %}{{ creator.name }}{% if not forloop.last %},
+    {% endif %}{% endfor %}</p>
+    <p>Publication year: {{ publication.publication_year }}</p>
+    <p>Type of resource: {{ publication.resource_type }}</p>
+    <p>{{ publication.identifier }}</p>
+    <p>Version: {{ publication.version }}</p>
 {% endblock %}
