@@ -114,13 +114,18 @@ class AffiliationAdmin(admin.ModelAdmin):
 
 
 class CreatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'given_name', 'family_name', 'name_identifier', 'affiliation', 'publication_list')
-    ordering = ['name', 'given_name', 'family_name', 'name_identifier', 'affiliation', ]
+    list_display = ('name', 'given_name', 'family_name', 'affiliation_list', 'publication_list')
+    ordering = ['name', 'given_name', 'family_name', ]
 
     def publication_list(self, obj):
         publications = obj.publication.all()
 
         return ", ".join([publication.identifier.uri for publication in publications])
+
+    def affiliation_list(self, obj):
+        affiliations = obj.affiliation.all()
+
+        return ", ".join([affiliation.name for affiliation in affiliations])
 
 
 class TitleTypeAdmin(admin.ModelAdmin):
