@@ -261,6 +261,19 @@ class RelatedIdentifier(models.Model):
         return "{} {} ({})".format(self.relation_type, self.identifier, self.related_identifier_type)
 
 
+class Format(models.Model):
+    """
+    Technical format of a resource.
+    """
+    format = models.CharField(max_length=100,
+                              help_text='Technical format of a resource where this is listed as a Mime type '
+                                        '(not required by DataCite).',
+                              blank=False, null=False, unique=True)
+
+    def __str__(self):
+        return "{}".format(self.format)
+
+
 class Publication(models.Model):
     """
     Describes a publication according to the DataCite Metadata Schema version 4.3.
@@ -301,10 +314,11 @@ class Publication(models.Model):
     resource_type = models.ForeignKey(ResourceType, help_text='Description of the resource.', blank=False,
                                       null=False, on_delete=models.PROTECT)
     related_identifier = models.ManyToManyField(RelatedIdentifier,
-                                                help_text='Publication to which the identifier relates.', blank=False)
+                                                help_text='Publication to which the identifier relates.', blank=True)
     size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).',
                                      validators=[MinValueValidator(0)], blank=False,
                                      null=False)
+    format = models.ManyToManyField(Format, help_text='Formats of the resource.', blank=True)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -371,20 +385,7 @@ class Size(models.Model):
         unique_together = (('publication', 'size', 'units'),)
 
 
-class Format(models.Model):
-    """
-    Technical format of a resource.
-    """
-    publication = models.ForeignKey(Publication, help_text='Publication described by a format.', blank=False,
-                                    null=False,
-                                    on_delete=models.PROTECT)
-    format = models.CharField(max_length=100, help_text='Technical format of a resource.', blank=True, null=True)
 
-    def __str__(self):
-        return "{}".format(self.format)
-
-    class Meta:
-        unique_together = (('publication', 'format'),)
 
 
 class Rights(models.Model):
