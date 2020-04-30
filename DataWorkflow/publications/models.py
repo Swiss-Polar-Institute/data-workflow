@@ -66,7 +66,7 @@ class ResourceType(models.Model):
     description = models.CharField(max_length=50, help_text='Free text description of a resource, preferably one term,'
                                                             ' description of the resource that can be combined with '
                                                             'the sub-property.', blank=False, null=False)
-    type_general = models.OneToOneField(ResourceTypeGeneral, help_text='General type of a resource.', blank=False,
+    type_general = models.ForeignKey(ResourceTypeGeneral, help_text='General type of a resource.', blank=False,
                                         null=False, on_delete=models.PROTECT)
 
     def __str__(self):
@@ -201,10 +201,7 @@ class Publisher(models.Model):
      produces" the code, use the property Contributor/contributorType/hostingInstitution for the code repository.
     """
     name = models.CharField(max_length=200, help_text='Name of the publisher.', blank=False,
-                            null=False)
-
-    class Meta:
-        unique_together = (('name', 'identifier'),)
+                            null=False, unique=True)
 
 
 class PublisherIdentifier(AbstractIdentifier):
