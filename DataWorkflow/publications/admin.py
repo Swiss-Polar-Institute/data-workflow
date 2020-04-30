@@ -34,7 +34,7 @@ class PublisherAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'version', )
+    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'format_list', 'version', )
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', ]
 
     def creator_list(self, obj):
@@ -47,6 +47,11 @@ class PublicationAdmin(admin.ModelAdmin):
 
         return ", ".join([title.name for title in titles])
 
+    def format_list(self, obj):
+        formats = obj.format.all()
+
+        return ", ".join([format.name for format in formats])
+
 
 class SizeAdmin(admin.ModelAdmin):
     list_display = ('publication', 'size', )
@@ -54,8 +59,8 @@ class SizeAdmin(admin.ModelAdmin):
 
 
 class FormatAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'format', )
-    ordering = ['publication', 'format', ]
+    list_display = ('name', )
+    ordering = ['name', ]
 
 
 class RightsAdmin(admin.ModelAdmin):
