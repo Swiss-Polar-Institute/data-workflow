@@ -279,9 +279,6 @@ class Format(models.Model):
         return "{}".format(self.format)
 
 
-
-
-
 class Rights(models.Model):
     """
     Any rights information for a resource. Property may be repeated for complex situations.
@@ -343,7 +340,8 @@ class FunderIdentifier(AbstractIdentifier):
     """
     Unique identifier of a funding entity, according to various types.
     """
-    funding_reference = models.ForeignKey(FundingReference)
+    funding_reference = models.ForeignKey(FundingReference, help_text='Funder identified by the unique identifier.',
+                                          blank=False, null=False, on_delete=models.PROTECT)
 
     def __str__(self):
         return "{}".format(self.identifier)
