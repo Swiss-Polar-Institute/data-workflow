@@ -23,6 +23,16 @@ class ResourceTypeAdmin(admin.ModelAdmin):
     ordering = ['description', 'type_general', ]
 
 
+class PublisherIdentifierAdmin(admin.ModelAdmin):
+    list_display = ('identifier', 'identifier_schema', 'schema_uri', )
+    ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
+
+
+class PublisherAdmin(admin.ModelAdmin):
+    list_display = ('name', 'identifier', )
+    ordering = ['name', 'identifier', ]
+
+
 class PublicationAdmin(admin.ModelAdmin):
     list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'version', )
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', ]

@@ -251,7 +251,7 @@ class Publication(models.Model):
                                                      'would be preferred from a citation perspective. ',
                                            validators=[MinValueValidator(2016), MaxValueValidator(2050)], blank=False,
                                            null=False)
-    resource_type = models.OneToOneField(ResourceType, help_text='Description of the resource.', blank=False,
+    resource_type = models.ForeignKey(ResourceType, help_text='Description of the resource.', blank=False,
                                          null=False, on_delete=models.PROTECT)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
