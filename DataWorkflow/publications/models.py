@@ -265,7 +265,7 @@ class Format(models.Model):
     """
     Technical format of a resource.
     """
-    format = models.CharField(max_length=100,
+    name = models.CharField(max_length=100,
                               help_text='Technical format of a resource where this is listed as a Mime type '
                                         '(not required by DataCite).',
                               blank=False, null=False, unique=True)
