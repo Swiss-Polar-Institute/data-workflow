@@ -439,6 +439,9 @@ class SizeUnits(models.Model):
     def __str__(self):
         return "{}".format(self.unit)
 
+    class Meta:
+        verbose_name_plural = 'Size units'
+
 
 class Size(models.Model):
     """
