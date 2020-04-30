@@ -5,7 +5,7 @@ import publications.models
 # Register your models here.
 
 class SchemaAdmin(admin.ModelAdmin):
-    list_display = ('name', 'uri', )
+    list_display = ('name', 'uri',)
     ordering = ['name', 'uri', ]
 
 
@@ -30,19 +30,19 @@ class ResourceTypeAdmin(admin.ModelAdmin):
 
 
 class PublisherIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('publisher', 'identifier', 'identifier_schema', )
+    list_display = ('publisher', 'identifier', 'identifier_schema',)
     ordering = ['publisher', 'identifier', 'identifier_schema', ]
 
 
 class PublisherAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class PublicationAdmin(admin.ModelAdmin):
     list_display = (
-    'main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type',
-    'related_identifier_list', 'size_bytes', 'format_list', 'version', 'rights', 'funding_list',)
+        'main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type',
+        'related_identifier_list', 'size_bytes', 'format_list', 'version', 'rights', 'funding_list',)
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'size_bytes', 'version', 'rights', ]
 
     def creator_list(self, obj):
@@ -70,13 +70,14 @@ class PublicationAdmin(admin.ModelAdmin):
 
         return ", ".join([related_identifier.identifier for related_identifier in related_identifiers])
 
+
 class SizeUnitsAdmin(admin.ModelAdmin):
-    list_display = ('unit', )
+    list_display = ('unit',)
     ordering = ['unit', ]
 
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'size', 'units', )
+    list_display = ('publication', 'size', 'units',)
     ordering = ['publication', 'size', 'units', ]
 
 
@@ -86,17 +87,17 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 class RightsAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'uri', )
+    list_display = ('statement', 'uri',)
     ordering = ['statement', 'uri', ]
 
 
 class RightsIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('rights', 'identifier', 'identifier_schema', )
+    list_display = ('rights', 'identifier', 'identifier_schema',)
     ordering = ['rights', 'identifier', 'identifier_schema', ]
 
 
 class FunderIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('funding_reference', 'identifier', 'identifier_schema', )
+    list_display = ('funding_reference', 'identifier', 'identifier_schema',)
     ordering = ['funding_reference', 'identifier', 'identifier_schema', ]
 
 
@@ -146,22 +147,22 @@ class CreatorNameAdmin(admin.ModelAdmin):
 
 
 class NameIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('creator', 'identifier', 'identifier_schema', )
+    list_display = ('creator', 'identifier', 'identifier_schema',)
     ordering = ['creator', 'identifier', 'identifier_schema', ]
 
 
 class AffiliationIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('affiliation', 'identifier', 'identifier_schema', )
+    list_display = ('affiliation', 'identifier', 'identifier_schema',)
     ordering = ['affiliation', 'identifier', 'identifier_schema', ]
 
 
 class AffiliationAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class CreatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'given_name', 'family_name', 'affiliation_list', )
+    list_display = ('name', 'given_name', 'family_name', 'affiliation_list',)
     ordering = ['name', 'given_name', 'family_name', ]
 
     def affiliation_list(self, obj):
@@ -180,14 +181,19 @@ class TitleAdmin(admin.ModelAdmin):
     ordering = ['publication', 'name', 'type', ]
 
 
+admin.site.register(publications.models.Schema, SchemaAdmin)
 admin.site.register(publications.models.IdentifierType, IdentifierTypeAdmin)
 admin.site.register(publications.models.Identifier, IdentifierAdmin)
 admin.site.register(publications.models.ResourceTypeGeneral, ResourceTypeGeneralAdmin)
 admin.site.register(publications.models.ResourceType, ResourceTypeAdmin)
+admin.site.register(publications.models.Publisher, PublisherAdmin)
+admin.site.register(publications.models.PublisherIdentifier, PublisherIdentifierAdmin)
 admin.site.register(publications.models.Publication, PublicationAdmin)
+admin.site.register(publications.models.SizeUnits, SizeUnitsAdmin)
 admin.site.register(publications.models.Size, SizeAdmin)
 admin.site.register(publications.models.Format, FormatAdmin)
 admin.site.register(publications.models.Rights, RightsAdmin)
+admin.site.register(publications.models.RightsIdentifier, RightsIdentifierAdmin)
 admin.site.register(publications.models.FunderIdentifier, FunderIdentifierAdmin)
 admin.site.register(publications.models.Award, AwardAdmin)
 admin.site.register(publications.models.FundingReference, FundingReferenceAdmin)
