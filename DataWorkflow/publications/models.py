@@ -266,12 +266,32 @@ class Format(models.Model):
     Technical format of a resource.
     """
     name = models.CharField(max_length=100,
-                              help_text='Technical format of a resource where this is listed as a Mime type '
-                                        '(not required by DataCite).',
-                              blank=False, null=False, unique=True)
+                            help_text='Technical format of a resource where this is listed as a Mime type '
+                                      '(not required by DataCite).',
+                            blank=False, null=False, unique=True)
 
     def __str__(self):
         return "{}".format(self.format)
+
+
+class Rights(models.Model):
+    """
+    Any rights information for a resource. Property may be repeated for complex situations.
+    """
+    statement = models.TextField(max_length=1000, help_text='Rights information for a resource.', blank=False,
+                                 null=False)
+    uri = models.URLField(help_text='URI of the license', blank=True, null=True)
+    identifier = models.CharField(max_length=20, help_text='Short, standardised version of the license name.',
+                                  blank=False,
+                                  null=False)
+    identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
+    scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
+
+    def __str__(self):
+        return "{}. The full text of {} can be found at {}.".format(self.statement, self.identifier, self.uri)
+
+    class Meta:
+        verbose_name_plural = 'Rights'
 
 
 class Publication(models.Model):
@@ -320,6 +340,10 @@ class Publication(models.Model):
                                      null=False)
     format = models.ManyToManyField(Format, help_text='Formats of the resource.', blank=True)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
+    rights = models.ForeignKey(Rights,
+                               help_text='Any rights information for this resource.The property may be repeated to '
+                                         'record complex rights characteristics.',
+                               blank=True, null=True, on_delete=models.PROTECT)
 
     def save(self, *args, **kwargs):
         if not hasattr(self, 'title'):
@@ -383,32 +407,6 @@ class Size(models.Model):
 
     class Meta:
         unique_together = (('publication', 'size', 'units'),)
-
-
-
-
-
-class Rights(models.Model):
-    """
-    Any rights information for a resource. Property may be repeated for complex situations.
-    """
-    publication = models.ForeignKey(Publication, help_text='Publication to which the rights relate.', blank=False,
-                                    null=False, on_delete=models.PROTECT)
-    statement = models.TextField(max_length=1000, help_text='Rights information for a resource.', blank=False,
-                                 null=False)
-    uri = models.URLField(help_text='URI of the license', blank=True, null=True)
-    identifier = models.CharField(max_length=20, help_text='Short, standardised version of the license name.',
-                                  blank=False,
-                                  null=False)
-    identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
-    scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
-
-    def __str__(self):
-        return "{}. The full text of {} can be found at {}.".format(self.statement, self.identifier, self.uri)
-
-    class Meta:
-        verbose_name_plural = 'Rights'
-        unique_together = (('publication', 'identifier'),)
 
 
 class FunderIdentifier(models.Model):

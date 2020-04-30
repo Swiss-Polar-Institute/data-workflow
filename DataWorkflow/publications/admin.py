@@ -34,8 +34,8 @@ class PublisherAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'format_list', 'version', )
-    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', ]
+    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'format_list', 'version', 'rights', )
+    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', 'rights', ]
 
     def creator_list(self, obj):
         creators = obj.creator.all()
@@ -64,8 +64,8 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 class RightsAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', )
-    ordering = ['publication', 'statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', ]
+    list_display = ('statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', )
+    ordering = ['statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', ]
 
 
 class FunderIdentifierAdmin(admin.ModelAdmin):
