@@ -7,6 +7,17 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 # DataCite Metadata Working Group. (2019). DataCite Metadata Schema Documentation for the Publication and Citation
 # of Research Data. Version 4.3. DataCite e.V. https://doi.org/10.14454/7xq3-zf69
 
+class Schema(models.Model):
+    """
+    Details of a schema used for unique identifiers.
+    """
+    name = models.CharField(max_length=100, help_text='Name of a schema (not a DataCite model).', blank=False,
+                            null=False, unique=True)
+    uri = models.CharField(max_length=500, help_text='URI of a schema.', blank=False, null=False)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
 
 class IdentifierType(models.Model):
     """
