@@ -84,25 +84,12 @@ class AbstractIdentifier(models.Model):
     identifier = models.CharField(max_length=200,
                                   help_text='Uniquely identifies an item according to various schemas.', blank=False,
                                   null=False)
-    identifier_schema = models.CharField(max_length=200, help_text='Name of the identifier schema.',
-                                         blank=False, null=False)
-    schema_uri = models.URLField(max_length=100, help_text='URI of the identifier schema.', blank=False,
-                                 null=False)  # conditions here are required for the AffiliationIdentifier. They could
-
-    # be relaxed for the NameIdentifier.
+    identifier_schema = models.ForeignKey(Schema, help_text='Schema to which the identifier belongs.', blank=False,
+                                          null=False, on_delete=models.PROTECT)
 
     class Meta:
         abstract = True
         unique_together = (('identifier', 'identifier_schema'),)
-
-
-class AffiliationIdentifier(AbstractIdentifier):
-    """
-    Uniquely identifies the organisational affiliation of the creator
-    """
-
-    def __str__(self):
-        return "{} {}".format(self.identifier_schema, self.identifier)
 
 
 class Affiliation(models.Model):
@@ -113,15 +100,20 @@ class Affiliation(models.Model):
                                                       'been used for the creator, then the organisation to which this'
                                                       'group formally belongs could be used here.', blank=False,
                             null=False)
-    identifier = models.OneToOneField(AffiliationIdentifier, max_length=200,
-                                      help_text='Uniquely identifies the organisational affiliation of the creator.',
-                                      blank=True, null=True, on_delete=models.PROTECT)
 
     def __str__(self):
         return "{}".format(self.name)
 
-    class Meta:
-        unique_together = (('name', 'identifier'),)
+
+class AffiliationIdentifier(AbstractIdentifier):
+    """
+    Uniquely identifies the organisational affiliation of the creator
+    """
+    affiliation = models.ForeignKey(Affiliation, help_text='Affiliation identified by the unique identifier.',
+                                    blank=False, null=False, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{} {}".format(self.identifier_schema, self.identifier)
 
 
 class NameType(models.Model):
@@ -198,14 +190,8 @@ class NameIdentifier(AbstractIdentifier):
     def __str__(self):
         return "{} {}".format(self.identifier_schema, self.identifier)
 
-
-class PublisherIdentifier(AbstractIdentifier):
-    """
-    Uniquely identifies the organisational affiliation of the creator
-    """
-
-    def __str__(self):
-        return "{} {}".format(self.identifier_schema, self.identifier)
+    class Meta:
+        unique_together = (('creator', 'identifier'),)
 
 
 class Publisher(models.Model):
@@ -217,12 +203,20 @@ class Publisher(models.Model):
     """
     name = models.CharField(max_length=200, help_text='Name of the publisher.', blank=False,
                             null=False)
-    identifier = models.OneToOneField(PublisherIdentifier,
-                                      help_text='Uniquely identifies the publisher.',
-                                      blank=True, null=True, on_delete=models.PROTECT)
 
     class Meta:
         unique_together = (('name', 'identifier'),)
+
+
+class PublisherIdentifier(AbstractIdentifier):
+    """
+    Uniquely identifies the organisational affiliation of the creator
+    """
+    publisher = models.ForeignKey(Publisher, help_text='Publisher identified by the unique identifier.', blank=False,
+                                  null=False, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{} {}".format(self.identifier_schema, self.identifier)
 
 
 class RelatedIdentifierType(models.Model):
@@ -285,6 +279,9 @@ class Format(models.Model):
         return "{}".format(self.format)
 
 
+
+
+
 class Rights(models.Model):
     """
     Any rights information for a resource. Property may be repeated for complex situations.
@@ -292,17 +289,20 @@ class Rights(models.Model):
     statement = models.TextField(max_length=1000, help_text='Rights information for a resource.', blank=False,
                                  null=False)
     uri = models.URLField(help_text='URI of the license', blank=True, null=True)
-    identifier = models.CharField(max_length=20, help_text='Short, standardised version of the license name.',
-                                  blank=False,
-                                  null=False)
-    identifier_scheme = models.CharField(max_length=50, help_text='Name of the scheme', blank=True, null=True)
-    scheme_uri = models.URLField(help_text='URI of rights identifier scheme', blank=True, null=True)
 
     def __str__(self):
         return "{}. The full text of {} can be found at {}.".format(self.statement, self.identifier, self.uri)
 
     class Meta:
         verbose_name_plural = 'Rights'
+
+
+class RightsIdentifier(AbstractIdentifier):
+    """
+    Uniquely identifies rights according to various schemas.
+    """
+    rights = models.ForeignKey(Rights, help_text='Rights identified by the unique identifier.', blank=False, null=False,
+                               on_delete=models.PROTECT)
 
 
 class Award(models.Model):
@@ -321,29 +321,11 @@ class Award(models.Model):
         unique_together = (('number', 'uri'),)
 
 
-class FunderIdentifier(models.Model):
-    """
-    Unique identifier of a funding entity, according to various types.
-    """
-    identifier = models.CharField(max_length=200,
-                                  help_text='Unique identifier of a funding entity, according to various types.',
-                                  unique=True)
-    type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
-    scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
-
-    def __str__(self):
-        return "{} ({})".format(self.identifier, self.type)
-
-
 class FundingReference(models.Model):
     """
     Information about funding or financial information for the resource being registered.
     """
     funder_name = models.CharField(max_length=200, help_text='Name of the funding provider.', blank=False, null=False)
-    funder_identifier = models.OneToOneField(FunderIdentifier,
-                                             help_text='Unique identifier of a funding entity, according to various '
-                                                       'types.',
-                                             blank=True, null=True, on_delete=models.PROTECT)
     award_number = models.OneToOneField(Award,
                                         help_text='The code assigned by the funder to a sponsored award (grant).',
                                         blank=True, null=True, on_delete=models.PROTECT)
@@ -355,6 +337,16 @@ class FundingReference(models.Model):
 
     class Meta:
         unique_together = (('funder_name', 'award_number'),)
+
+
+class FunderIdentifier(AbstractIdentifier):
+    """
+    Unique identifier of a funding entity, according to various types.
+    """
+    funding_reference = models.ForeignKey(FundingReference)
+
+    def __str__(self):
+        return "{}".format(self.identifier)
 
 
 class Publication(models.Model):
