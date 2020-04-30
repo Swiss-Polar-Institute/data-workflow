@@ -28,16 +28,14 @@
         </tbody>
     </table>
     <a class="btn btn-primary btn" href="{% url 'publication_new' %}">Add new publication</a>
-
-{% endblock %}
-
-<script>
-    $(document).ready(function () {
-        $('#publications').DataTable({
-            "pageLength": 50,
-            "order": [[1, "asc"]]
+    <script>
+        $(document).ready(function () {
+            alert('hello');
+            $('#publications').DataTable({
+                "pageLength": 50,
+                "order": [[1, "asc"]],
+                "searchHighlight": true
+            });
         });
-    });
-</script>
-</body>
-</html>
+    </script>
+{% endblock %}

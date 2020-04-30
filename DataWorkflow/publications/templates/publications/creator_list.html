@@ -27,16 +27,13 @@
         {% endfor %}
         </tbody>
     </table>
-
-{% endblock %}
-
-<script>
-    $(document).ready(function () {
-        $('#creators').DataTable({
-            "pageLength": 50,
-            "order": [[1, "asc"]]
+    <script>
+        $(document).ready(function () {
+            $('#creators').DataTable({
+                "pageLength": 50,
+                "order": [[1, "asc"]],
+                "searchHighlight": true
+            });
         });
-    });
-</script>
-</body>
-</html>
+    </script>
+{% endblock %}
