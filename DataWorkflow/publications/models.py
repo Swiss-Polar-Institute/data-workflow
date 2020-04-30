@@ -302,8 +302,9 @@ class Publication(models.Model):
                                       null=False, on_delete=models.PROTECT)
     related_identifier = models.ManyToManyField(RelatedIdentifier,
                                                 help_text='Publication to which the identifier relates.', blank=False)
-    size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).', validators=[MinValueValidator(0)], blank=False,
-                                    null=False)
+    size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).',
+                                     validators=[MinValueValidator(0)], blank=False,
+                                     null=False)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -337,6 +338,17 @@ class Publication(models.Model):
                                                       self.publisher, self.identifier)
 
 
+class SizeUnits(models.Model):
+    """
+    Units of size of a resource.
+    """
+    unit = models.CharField(max_length=30, help_text='Units of a measurement of size (not a DataCite field).',
+                            blank=False, null=False, unique=True)
+
+    def __str__(self):
+        return "{}".format(self.unit)
+
+
 class Size(models.Model):
     """
     Size of resource. Free text to include data volume, pages, time etc.
@@ -346,13 +358,17 @@ class Size(models.Model):
                                     on_delete=models.PROTECT)
     size = models.CharField(max_length=50,
                             help_text='Size of resource. Free text to include data volume, pages, time etc.',
-                            blank=True, null=True)
+                            blank=False, null=False)
+    units = models.ForeignKey(SizeUnits,
+                              help_text='Units of measurement (not a DataCite field). Note that there is a separate '
+                                        'field for size of the resource in bytes.',
+                              blank=False, null=False, on_delete=models.PROTECT)
 
     def __str__(self):
-        return "{}".format(self.size)
+        return "{} {}".format(self.size, self.units)
 
     class Meta:
-        unique_together = (('publication', 'size'),)
+        unique_together = (('publication', 'size', 'units'),)
 
 
 class Format(models.Model):
