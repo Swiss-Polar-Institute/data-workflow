@@ -152,7 +152,8 @@ class Creator(models.Model):
     family_name = models.CharField(max_length=50, help_text='Surname or last name of the creator.', blank=True,
                                    null=True)
     affiliation = models.ManyToManyField(Affiliation,
-                                    help_text='Organisational or institutional affiliations of the creator.', blank=True)
+                                         help_text='Organisational or institutional affiliations of the creator.',
+                                         blank=True)
 
     # def __str__(self):
     #     publications = self.publication.all()
@@ -180,10 +181,37 @@ class NameIdentifier(AbstractIdentifier):
     """
     Uniquely identifies an individual or organisation according to various schemas.
     """
-    creator = models.ForeignKey(Creator, help_text='Creator to which the unique name identifier belongs.', blank=False, null=False, on_delete=models.PROTECT)
+    creator = models.ForeignKey(Creator, help_text='Creator to which the unique name identifier belongs.', blank=False,
+                                null=False, on_delete=models.PROTECT)
 
     def __str__(self):
         return "{} {}".format(self.identifier_schema, self.identifier)
+
+
+class PublisherIdentifier(AbstractIdentifier):
+    """
+    Uniquely identifies the organisational affiliation of the creator
+    """
+
+    def __str__(self):
+        return "{} {}".format(self.identifier_schema, self.identifier)
+
+
+class Publisher(models.Model):
+    """
+    The name of the entity that holds, archives, publishes prints, distributes, releases, issues, or produces the
+    resource. This property will be used to formulate the citation, so consider the prominence of the role. For
+    software, use Publisher for the code repository. If there is an entity other than a code repository, that "holds, or
+     produces" the code, use the property Contributor/contributorType/hostingInstitution for the code repository.
+    """
+    name = models.CharField(max_length=200, help_text='Name of the publisher.', blank=False,
+                            null=False)
+    identifier = models.OneToOneField(PublisherIdentifier,
+                                      help_text='Uniquely identifies the publisher.',
+                                      blank=True, null=True, on_delete=models.PROTECT)
+
+    class Meta:
+        unique_together = (('name', 'identifier'),)
 
 
 class Publication(models.Model):
@@ -199,16 +227,17 @@ class Publication(models.Model):
                                      help_text='Main researchers involved in the publication, or authors of the '
                                                'publication, in order of priority. This can be an organisation or a '
                                                'person.', blank=False)
-    publisher = models.CharField(max_length=500, help_text='The name of the entity that holds, archives, publishes '
-                                                           'prints, distributes, releases, issues, or produces the '
-                                                           'resource. This property will be used to formulate the '
-                                                           'citation, so consider the prominence of the role. For '
-                                                           'software, use Publisher for the code repository. If there '
-                                                           'is an entity other than a code repository, that "holds, '
-                                                           'archives, publishes, prints, distributes, releases, issues,'
-                                                           ' or produces" the code, use the property '
-                                                           'Contributor/contributorType/hostingInstitution for the code'
-                                                           ' repository.', blank=False, null=False)
+    publisher = models.ForeignKey(Publisher, help_text='The name of the entity that holds, archives, publishes '
+                                                       'prints, distributes, releases, issues, or produces the '
+                                                       'resource. This property will be used to formulate the '
+                                                       'citation, so consider the prominence of the role. For '
+                                                       'software, use Publisher for the code repository. If there '
+                                                       'is an entity other than a code repository, that "holds, '
+                                                       'archives, publishes, prints, distributes, releases, issues,'
+                                                       ' or produces" the code, use the property '
+                                                       'Contributor/contributorType/hostingInstitution for the code'
+                                                       ' repository.', blank=False, null=False,
+                                  on_delete=models.PROTECT)
     publication_year = models.IntegerField(help_text='The year when the data was or will be made publicly available. '
                                                      'In the case of resources such as software or dynamic data where '
                                                      'there may be multiple releases in one year, include the '
@@ -449,21 +478,6 @@ class Date(models.Model):
 
     class Meta:
         unique_together = (('publication', 'date', 'type'),)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 class TitleType(models.Model):

@@ -24,13 +24,18 @@ class ResourceTypeAdmin(admin.ModelAdmin):
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('main_title', 'creator_list', 'identifier', 'publisher', 'publication_year', 'resource_type', 'version', )
+    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'version', )
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', ]
 
     def creator_list(self, obj):
         creators = obj.creator.all()
 
         return ", ".join([creator.name for creator in creators])
+
+    def title_list(self, obj):
+        titles = obj.title.all()
+
+        return ", ".join([title.name for title in titles])
 
 
 class SizeAdmin(admin.ModelAdmin):
@@ -134,8 +139,8 @@ class TitleTypeAdmin(admin.ModelAdmin):
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'name', 'type', )
-    ordering = ['publication', 'name', 'type', ]
+    list_display = ('name', 'type', )
+    ordering = ['name', 'type', ]
 
 
 admin.site.register(publications.models.IdentifierType, IdentifierTypeAdmin)
