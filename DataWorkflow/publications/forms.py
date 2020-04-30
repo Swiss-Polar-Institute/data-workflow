@@ -28,3 +28,26 @@ class PublicationForm(forms.ModelForm):
     class Meta:
         model = Publication
         fields = ('identifier', 'publisher', 'publication_year', 'resource_type', 'version')
+
+
+class CreatorForm(forms.ModelForm):
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance.id:
+            name = self.instance.name()
+        else:
+            name = None
+        self.fields['name'] = forms.CharField(label='Name', max_length=100, initial=name)
+
+    # def save(self, *args, **kwargs):
+    #     title = self.cleaned_data['title']
+    #
+    #     creator = super().save(*args, **kwargs)
+    #     creator.name = name
+    #     creator.name_type = CreatorName.objects.get(name='MainTitle')
+    #
+    #     creator.save()
+    #
+    #     return creator

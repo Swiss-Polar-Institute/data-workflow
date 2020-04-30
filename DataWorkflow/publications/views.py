@@ -57,3 +57,15 @@ def creator_detail(request, pk):
     return render(request, 'publications/creator_detail.html', {'creator': creator})
 
 
+def creator_edit(request, pk):
+    creator = get_object_or_404(Creator, pk=pk)
+    if request.method == "POST":
+        form = CreatorForm(request.POST, instance=creator)
+        if form.is_valid():
+            creator = form.save(commit=False)
+            creator.save()
+            return redirect('creator_detail', pk=creator.pk)
+    else:
+        form = CreatorForm(instance=creator)
+    return render(request, 'publications/creator_edit.html', {'form': form})
+
