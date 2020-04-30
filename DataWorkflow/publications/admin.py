@@ -3,6 +3,12 @@ import publications.models
 
 
 # Register your models here.
+
+class SchemaAdmin(admin.ModelAdmin):
+    list_display = ('name', 'uri', )
+    ordering = ['name', 'uri', ]
+
+
 class IdentifierTypeAdmin(admin.ModelAdmin):
     list_display = ('name',)
     ordering = ['name', ]
@@ -24,20 +30,20 @@ class ResourceTypeAdmin(admin.ModelAdmin):
 
 
 class PublisherIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
-    ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
+    list_display = ('publisher', 'identifier', 'identifier_schema', )
+    ordering = ['publisher', 'identifier', 'identifier_schema', ]
 
 
 class PublisherAdmin(admin.ModelAdmin):
-    list_display = ('name', 'identifier',)
-    ordering = ['name', 'identifier', ]
+    list_display = ('name', )
+    ordering = ['name', ]
 
 
 class PublicationAdmin(admin.ModelAdmin):
     list_display = (
     'main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type',
-    'format_list', 'version', 'rights', 'funding_list',)
-    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', 'rights', ]
+    'related_identifier_list', 'size_bytes', 'format_list', 'version', 'rights', 'funding_list',)
+    ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'size_bytes', 'version', 'rights', ]
 
     def creator_list(self, obj):
         creators = obj.creator.all()
@@ -59,10 +65,19 @@ class PublicationAdmin(admin.ModelAdmin):
 
         return ", ".join([funding_reference.funder_name for funding_reference in funding_references])
 
+    def related_identifier_list(self, obj):
+        related_identifiers = obj.related_identifier.all()
+
+        return ", ".join([related_identifier.identifier for related_identifier in related_identifiers])
+
+class SizeUnitsAdmin(admin.ModelAdmin):
+    list_display = ('unit', )
+    ordering = ['unit', ]
+
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'size',)
-    ordering = ['publication', 'size', ]
+    list_display = ('publication', 'size', 'units', )
+    ordering = ['publication', 'size', 'units', ]
 
 
 class FormatAdmin(admin.ModelAdmin):
@@ -71,13 +86,18 @@ class FormatAdmin(admin.ModelAdmin):
 
 
 class RightsAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri',)
-    ordering = ['statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', ]
+    list_display = ('statement', 'uri', )
+    ordering = ['statement', 'uri', ]
+
+
+class RightsIdentifierAdmin(admin.ModelAdmin):
+    list_display = ('rights', 'identifier', 'identifier_schema', )
+    ordering = ['rights', 'identifier', 'identifier_schema', ]
 
 
 class FunderIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'type', 'scheme_uri',)
-    ordering = ['identifier', 'type', 'scheme_uri', ]
+    list_display = ('funding_reference', 'identifier', 'identifier_schema', )
+    ordering = ['funding_reference', 'identifier', 'identifier_schema', ]
 
 
 class AwardAdmin(admin.ModelAdmin):
@@ -86,8 +106,8 @@ class AwardAdmin(admin.ModelAdmin):
 
 
 class FundingReferenceAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'funder_name', 'funder_identifier', 'award_number', 'award_title',)
-    ordering = ['publication', 'funder_name', 'funder_identifier', 'award_number', 'award_title', ]
+    list_display = ('funder_name', 'award_number', 'award_title',)
+    ordering = ['funder_name', 'award_number', 'award_title', ]
 
 
 class RelationTypeAdmin(admin.ModelAdmin):
@@ -101,8 +121,8 @@ class RelatedIdentifierTypeAdmin(admin.ModelAdmin):
 
 
 class RelatedIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'identifier', 'related_identifier_type', 'relation_type',)
-    ordering = ['publication', 'identifier', 'related_identifier_type', 'relation_type', ]
+    list_display = ('identifier', 'related_identifier_type', 'relation_type',)
+    ordering = ['identifier', 'related_identifier_type', 'relation_type', ]
 
 
 class DateTypeAdmin(admin.ModelAdmin):
@@ -126,28 +146,23 @@ class CreatorNameAdmin(admin.ModelAdmin):
 
 
 class NameIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
-    ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
+    list_display = ('creator', 'identifier', 'identifier_schema', )
+    ordering = ['creator', 'identifier', 'identifier_schema', ]
 
 
 class AffiliationIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
-    ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
+    list_display = ('affiliation', 'identifier', 'identifier_schema', )
+    ordering = ['affiliation', 'identifier', 'identifier_schema', ]
 
 
 class AffiliationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'identifier',)
-    ordering = ['name', 'identifier', ]
+    list_display = ('name', )
+    ordering = ['name', ]
 
 
 class CreatorAdmin(admin.ModelAdmin):
-    list_display = ('name', 'given_name', 'family_name', 'affiliation_list', 'publication_list')
+    list_display = ('name', 'given_name', 'family_name', 'affiliation_list', )
     ordering = ['name', 'given_name', 'family_name', ]
-
-    def publication_list(self, obj):
-        publications = obj.publication.all()
-
-        return ", ".join([publication.identifier.uri for publication in publications])
 
     def affiliation_list(self, obj):
         affiliations = obj.affiliation.all()
@@ -161,8 +176,8 @@ class TitleTypeAdmin(admin.ModelAdmin):
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type',)
-    ordering = ['name', 'type', ]
+    list_display = ('publication', 'name', 'type',)
+    ordering = ['publication', 'name', 'type', ]
 
 
 admin.site.register(publications.models.IdentifierType, IdentifierTypeAdmin)

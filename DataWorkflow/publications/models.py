@@ -23,7 +23,6 @@ class IdentifierType(models.Model):
     """
     Type of identifier as from list in DataCite Metadata Schema version 4.3
     """
-
     name = models.CharField(help_text='Name of an identifier type', max_length=50, blank=False, null=False, unique=True)
 
     def __str__(self):
