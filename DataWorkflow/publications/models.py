@@ -214,6 +214,53 @@ class Publisher(models.Model):
         unique_together = (('name', 'identifier'),)
 
 
+class RelatedIdentifierType(models.Model):
+    """
+    Type of related identifier
+    """
+    name = models.CharField(max_length=50, help_text='Type of related identifier', blank=False, null=False, unique=True)
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+
+class RelationType(models.Model):
+    """
+    Description of relationship between resource being registered and related resource.
+    """
+    name = models.CharField(max_length=50,
+                            help_text='Description of relationship between resource being registered and related '
+                                      'resource.',
+                            blank=False, null=False, unique=True)
+    description = models.TextField(max_length=1000,
+                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
+                                   blank=False, null=False)
+
+    def __str__(self):
+        return "{}".format(self.name)
+
+
+class RelatedIdentifier(models.Model):
+    """
+    Globally unique identifiers of related resources.
+    """
+    identifier = models.CharField(max_length=200,
+                                  help_text='Uniquely identifies an item according to various schemas.', blank=False,
+                                  null=False, unique=True)
+    related_identifier_type = models.ForeignKey(RelatedIdentifierType, blank=False, null=False,
+                                                on_delete=models.PROTECT)
+    relation_type = models.ForeignKey(RelationType,
+                                      help_text='Description of relationship between resource being registered and '
+                                                'related resource.',
+                                      blank=False, null=False, on_delete=models.PROTECT)
+
+    def __str__(self):
+        return "{} {} ({})".format(self.relation_type, self.identifier, self.related_identifier_type)
+
+
 class Publication(models.Model):
     """
     Describes a publication according to the DataCite Metadata Schema version 4.3.
@@ -252,7 +299,11 @@ class Publication(models.Model):
                                            validators=[MinValueValidator(2016), MaxValueValidator(2050)], blank=False,
                                            null=False)
     resource_type = models.ForeignKey(ResourceType, help_text='Description of the resource.', blank=False,
-                                         null=False, on_delete=models.PROTECT)
+                                      null=False, on_delete=models.PROTECT)
+    related_identifier = models.ManyToManyField(RelatedIdentifier,
+                                                help_text='Publication to which the identifier relates.', blank=False)
+    size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).', blank=False,
+                                    null=False)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
     def save(self, *args, **kwargs):
@@ -395,58 +446,6 @@ class FundingReference(models.Model):
 
     class Meta:
         unique_together = (('publication', 'funder_name', 'award_number'),)
-
-
-class RelationType(models.Model):
-    """
-    Description of relationship between resource being registered and related resource.
-    """
-    name = models.CharField(max_length=50,
-                            help_text='Description of relationship between resource being registered and related '
-                                      'resource.',
-                            blank=False, null=False, unique=True)
-    description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
-                                   blank=False, null=False)
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-
-class RelatedIdentifierType(models.Model):
-    """
-    Type of related identifier
-    """
-    name = models.CharField(max_length=50, help_text='Type of related identifier', blank=False, null=False, unique=True)
-    description = models.TextField(max_length=1000,
-                                   help_text='Description of type according to DataCite Metadata Schema v4.3.',
-                                   blank=False, null=False)
-
-    def __str__(self):
-        return "{}".format(self.name)
-
-
-class RelatedIdentifier(models.Model):
-    """
-    Globally unique identifiers of related resources.
-    """
-    publication = models.ForeignKey(Publication, help_text='Publication to which the identifier relates.', blank=False,
-                                    null=False, on_delete=models.PROTECT)
-    identifier = models.CharField(max_length=200,
-                                  help_text='Uniquely identifies an item according to various schemas.', blank=False,
-                                  null=False)
-    related_identifier_type = models.ForeignKey(RelatedIdentifierType, blank=False, null=False,
-                                                on_delete=models.PROTECT)
-    relation_type = models.ForeignKey(RelationType,
-                                      help_text='Description of relationship between resource being registered and '
-                                                'related resource.',
-                                      blank=False, null=False, on_delete=models.PROTECT)
-
-    def __str__(self):
-        return "{} {} ({})".format(self.relation_type, self.identifier, self.related_identifier_type)
-
-    class Meta:
-        unique_together = (('publication', 'identifier'),)
 
 
 class DateType(models.Model):
