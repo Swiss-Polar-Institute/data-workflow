@@ -294,6 +294,58 @@ class Rights(models.Model):
         verbose_name_plural = 'Rights'
 
 
+class Award(models.Model):
+    """
+    The code assigned by the funder to a sponsored award (grant).
+    """
+    number = models.CharField(max_length=50, help_text='Code assigned by the funder to a sponsered award (grant).',
+                              blank=False, null=False)
+    uri = models.URLField(help_text='The URI leading to a page provided by the funder for more information about the '
+                                    'award (grant).', blank=True, null=True)
+
+    def __str__(self):
+        return "{}".format(self.number)
+
+    class Meta:
+        unique_together = (('number', 'uri'),)
+
+
+class FunderIdentifier(models.Model):
+    """
+    Unique identifier of a funding entity, according to various types.
+    """
+    identifier = models.CharField(max_length=200,
+                                  help_text='Unique identifier of a funding entity, according to various types.',
+                                  unique=True)
+    type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
+    scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
+
+    def __str__(self):
+        return "{} ({})".format(self.identifier, self.type)
+
+
+class FundingReference(models.Model):
+    """
+    Information about funding or financial information for the resource being registered.
+    """
+    funder_name = models.CharField(max_length=200, help_text='Name of the funding provider.', blank=False, null=False)
+    funder_identifier = models.OneToOneField(FunderIdentifier,
+                                             help_text='Unique identifier of a funding entity, according to various '
+                                                       'types.',
+                                             blank=True, null=True, on_delete=models.PROTECT)
+    award_number = models.OneToOneField(Award,
+                                        help_text='The code assigned by the funder to a sponsored award (grant).',
+                                        blank=True, null=True, on_delete=models.PROTECT)
+    award_title = models.CharField(max_length=500, help_text='Human readable name or title of the award (grant).',
+                                   blank=True, null=True)
+
+    def __str__(self):
+        return "{}. {} ({})".format(self.funder_name, self.award_title, self.award_number)
+
+    class Meta:
+        unique_together = (('funder_name', 'award_number'),)
+
+
 class Publication(models.Model):
     """
     Describes a publication according to the DataCite Metadata Schema version 4.3.
@@ -344,6 +396,10 @@ class Publication(models.Model):
                                help_text='Any rights information for this resource.The property may be repeated to '
                                          'record complex rights characteristics.',
                                blank=True, null=True, on_delete=models.PROTECT)
+    funding = models.ManyToManyField(FundingReference,
+                                     help_text='Information about funding or financial information for the resource '
+                                               'being registered.',
+                                     blank=True)
 
     def save(self, *args, **kwargs):
         if not hasattr(self, 'title'):
@@ -407,60 +463,6 @@ class Size(models.Model):
 
     class Meta:
         unique_together = (('publication', 'size', 'units'),)
-
-
-class FunderIdentifier(models.Model):
-    """
-    Unique identifier of a funding entity, according to various types.
-    """
-    identifier = models.CharField(max_length=200,
-                                  help_text='Unique identifier of a funding entity, according to various types.',
-                                  unique=True)
-    type = models.CharField(max_length=50, help_text='Type of the funder identifier.', blank=True, null=True)
-    scheme_uri = models.URLField(help_text='URI of the funder identifier scheme.', blank=True, null=True)
-
-    def __str__(self):
-        return "{} ({})".format(self.identifier, self.type)
-
-
-class Award(models.Model):
-    """
-    The code assigned by the funder to a sponsored award (grant).
-    """
-    number = models.CharField(max_length=50, help_text='Code assigned by the funder to a sponsered award (grant).',
-                              blank=False, null=False)
-    uri = models.URLField(help_text='The URI leading to a page provided by the funder for more information about the '
-                                    'award (grant).', blank=True, null=True)
-
-    def __str__(self):
-        return "{}".format(self.number)
-
-    class Meta:
-        unique_together = (('number', 'uri'),)
-
-
-class FundingReference(models.Model):
-    """
-    Information about funding or financial information for the resource being registered.
-    """
-    publication = models.ForeignKey(Publication, help_text='Publication to which the funding relates.', blank=False,
-                                    null=False, on_delete=models.PROTECT)
-    funder_name = models.CharField(max_length=200, help_text='Name of the funding provider.', blank=False, null=False)
-    funder_identifier = models.OneToOneField(FunderIdentifier,
-                                             help_text='Unique identifier of a funding entity, according to various '
-                                                       'types.',
-                                             blank=True, null=True, on_delete=models.PROTECT)
-    award_number = models.OneToOneField(Award,
-                                        help_text='The code assigned by the funder to a sponsored award (grant).',
-                                        blank=True, null=True, on_delete=models.PROTECT)
-    award_title = models.CharField(max_length=500, help_text='Human readable name or title of the award (grant).',
-                                   blank=True, null=True)
-
-    def __str__(self):
-        return "{}. {} ({})".format(self.funder_name, self.award_title, self.award_number)
-
-    class Meta:
-        unique_together = (('publication', 'funder_name', 'award_number'),)
 
 
 class DateType(models.Model):
