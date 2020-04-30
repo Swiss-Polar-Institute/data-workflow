@@ -302,7 +302,7 @@ class Publication(models.Model):
                                       null=False, on_delete=models.PROTECT)
     related_identifier = models.ManyToManyField(RelatedIdentifier,
                                                 help_text='Publication to which the identifier relates.', blank=False)
-    size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).', blank=False,
+    size_bytes = models.IntegerField(help_text='Size of the resource in bytes (not a DataCite field).', validators=[MinValueValidator(0)], blank=False,
                                     null=False)
     version = models.CharField(max_length=10, help_text='Version number of the resource.', blank=True, null=True)
 
