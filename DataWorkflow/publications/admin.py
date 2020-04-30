@@ -4,37 +4,39 @@ import publications.models
 
 # Register your models here.
 class IdentifierTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class IdentifierAdmin(admin.ModelAdmin):
-    list_display = ('uri', 'type', )
+    list_display = ('uri', 'type',)
     ordering = ['uri', 'type', ]
 
 
 class ResourceTypeGeneralAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', )
+    list_display = ('name', 'description',)
     ordering = ['name', 'description', ]
 
 
 class ResourceTypeAdmin(admin.ModelAdmin):
-    list_display = ('description', 'type_general', )
+    list_display = ('description', 'type_general',)
     ordering = ['description', 'type_general', ]
 
 
 class PublisherIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri', )
+    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
     ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
 
 
 class PublisherAdmin(admin.ModelAdmin):
-    list_display = ('name', 'identifier', )
+    list_display = ('name', 'identifier',)
     ordering = ['name', 'identifier', ]
 
 
 class PublicationAdmin(admin.ModelAdmin):
-    list_display = ('main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type', 'format_list', 'version', 'rights', )
+    list_display = (
+    'main_title', 'identifier', 'creator_list', 'title_list', 'publisher', 'publication_year', 'resource_type',
+    'format_list', 'version', 'rights', 'funding_list',)
     ordering = ['identifier', 'publisher', 'publication_year', 'resource_type', 'version', 'rights', ]
 
     def creator_list(self, obj):
@@ -52,84 +54,89 @@ class PublicationAdmin(admin.ModelAdmin):
 
         return ", ".join([format.name for format in formats])
 
+    def funding_list(self, obj):
+        funding_references = obj.funding.all()
+
+        return ", ".join([funding_reference.funder_name for funding_reference in funding_references])
+
 
 class SizeAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'size', )
+    list_display = ('publication', 'size',)
     ordering = ['publication', 'size', ]
 
 
 class FormatAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class RightsAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', )
+    list_display = ('statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri',)
     ordering = ['statement', 'uri', 'identifier', 'identifier_scheme', 'scheme_uri', ]
 
 
 class FunderIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'type', 'scheme_uri', )
+    list_display = ('identifier', 'type', 'scheme_uri',)
     ordering = ['identifier', 'type', 'scheme_uri', ]
 
 
 class AwardAdmin(admin.ModelAdmin):
-    list_display = ('number', 'uri', )
+    list_display = ('number', 'uri',)
     ordering = ['number', 'uri', ]
 
 
 class FundingReferenceAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'funder_name', 'funder_identifier', 'award_number', 'award_title', )
+    list_display = ('publication', 'funder_name', 'funder_identifier', 'award_number', 'award_title',)
     ordering = ['publication', 'funder_name', 'funder_identifier', 'award_number', 'award_title', ]
 
 
 class RelationTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', )
+    list_display = ('name', 'description',)
     ordering = ['name', 'description', ]
 
 
 class RelatedIdentifierTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', )
+    list_display = ('name', 'description',)
     ordering = ['name', 'description', ]
 
 
 class RelatedIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'identifier', 'related_identifier_type', 'relation_type', )
+    list_display = ('publication', 'identifier', 'related_identifier_type', 'relation_type',)
     ordering = ['publication', 'identifier', 'related_identifier_type', 'relation_type', ]
 
 
 class DateTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', 'description', )
+    list_display = ('name', 'description',)
     ordering = ['name', 'description', ]
 
 
 class DateAdmin(admin.ModelAdmin):
-    list_display = ('publication', 'date', 'type', 'information', )
+    list_display = ('publication', 'date', 'type', 'information',)
     ordering = ['publication', 'date', 'type', 'information', ]
 
 
 class NameTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class CreatorNameAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', )
+    list_display = ('name', 'type',)
     ordering = ['name', 'type', ]
 
 
 class NameIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri', )
+    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
     ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
 
 
 class AffiliationIdentifierAdmin(admin.ModelAdmin):
-    list_display = ('identifier', 'identifier_schema', 'schema_uri', )
+    list_display = ('identifier', 'identifier_schema', 'schema_uri',)
     ordering = ['identifier', 'identifier_schema', 'schema_uri', ]
 
 
 class AffiliationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'identifier', )
+    list_display = ('name', 'identifier',)
     ordering = ['name', 'identifier', ]
 
 
@@ -149,12 +156,12 @@ class CreatorAdmin(admin.ModelAdmin):
 
 
 class TitleTypeAdmin(admin.ModelAdmin):
-    list_display = ('name', )
+    list_display = ('name',)
     ordering = ['name', ]
 
 
 class TitleAdmin(admin.ModelAdmin):
-    list_display = ('name', 'type', )
+    list_display = ('name', 'type',)
     ordering = ['name', 'type', ]
 
 
