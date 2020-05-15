@@ -1,5 +1,6 @@
 from django import forms
 
+import publications
 from .models import Publication, TitleType
 
 
@@ -51,3 +52,11 @@ class CreatorForm(forms.ModelForm):
     #     creator.save()
     #
     #     return creator
+
+
+#
+# class PublicationExtendedForm(PublicationForm):
+#
+#     def __init__(self, *args, **kwargs):
+#         super(PublicationExtendedForm, self).__init__(*args, **kwargs)
+#         self.fields['title'] = forms.CharField(label='Title', max_length=75)

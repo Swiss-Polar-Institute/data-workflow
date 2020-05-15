@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from .models import Publication, Creator
-from .forms import PublicationForm
+from .forms import PublicationForm, CreatorForm
 
 
 # Create your views here.

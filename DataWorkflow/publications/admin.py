@@ -3,6 +3,8 @@ import publications.models
 
 
 # Register your models here.
+from publications.forms import PublicationForm
+
 
 class SchemaAdmin(admin.ModelAdmin):
     list_display = ('name', 'uri',)
@@ -69,6 +71,10 @@ class PublicationAdmin(admin.ModelAdmin):
         related_identifiers = obj.related_identifier.all()
 
         return ", ".join([related_identifier.identifier for related_identifier in related_identifiers])
+
+    class Meta:
+        form = PublicationForm
+        fields = ('identifier', 'publisher', 'publication_year', 'resource_type', 'version', 'size_bytes', 'main_title')
 
 
 class SizeUnitsAdmin(admin.ModelAdmin):
