@@ -53,10 +53,3 @@ class CreatorForm(forms.ModelForm):
     #
     #     return creator
 
-
-#
-# class PublicationExtendedForm(PublicationForm):
-#
-#     def __init__(self, *args, **kwargs):
-#         super(PublicationExtendedForm, self).__init__(*args, **kwargs)
-#         self.fields['title'] = forms.CharField(label='Title', max_length=75)
